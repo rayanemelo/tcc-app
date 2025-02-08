@@ -1,30 +1,15 @@
 import { Marker } from 'react-native-maps';
-import { Coordinate } from '..';
-import { useEffect, useState } from 'react';
-import * as Location from 'expo-location';
+
 import { StyleSheet, View } from 'react-native';
 
+type Props = {
+  userLocation: {
+    latitude: number;
+    longitude: number;
+  } | null;
+}
 
-const UserLocation = () => {
-  const [userLocation, setUserLocation] = useState<Coordinate | null>();
-
-  useEffect(() => {
-    const getLocationPermission = async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === 'granted') {
-        const location = await Location.getCurrentPositionAsync({});
-        setUserLocation({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
-      } else {
-        console.log('Permissão de localização não concedida');
-      }
-    };
-
-    getLocationPermission();
-  }, []);
-
+const UserLocation = ({ userLocation }: Props) => {
   return userLocation && (
     <Marker coordinate={userLocation}>
       <View style={styles.shadow}>
@@ -33,7 +18,6 @@ const UserLocation = () => {
         </View>
       </View>
     </Marker>
-
   );
 };
 

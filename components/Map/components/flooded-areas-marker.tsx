@@ -4,9 +4,9 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { View, StyleSheet } from 'react-native';
 
 const floodedAreas = [
-  { "latitude": -23.550627913419614, "longitude": -46.63331374526024 },
-  { "latitude": -23.551870645000676, "longitude": -46.632745576464025 },
-  { "latitude": -23.551328537649713, "longitude": -46.634147676847725 }
+  { "latitude": -29.642781895977247, "longitude": -50.76904580046604 },
+  { "latitude": -29.662377218010036, "longitude": -50.76924130514626 },
+  { "latitude": -29.638590493759015, "longitude": -50.795634436975625 }
 ]
 
 const FloodedAreas = () => {

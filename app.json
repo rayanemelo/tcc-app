@@ -38,6 +38,14 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Permitir o uso de sua localização atual?"
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permitir o uso da câmera?",
+          "microphonePermission": "Permitir o uso do microfone?",
+          "recordAudioAndroid": true
+        }
       ]
     ],
     "experiments": {

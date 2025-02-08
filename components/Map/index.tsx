@@ -1,22 +1,34 @@
-import { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import MapView from 'react-native-maps';
 import CustomMarker from './components/marker';
 import FloodedAreas from './components/flooded-areas-marker';
 import UserLocation from './components/user-location';
-
-
-export type Coordinate = {
-  latitude: number;
-  longitude: number;
-};
+import { useUserLocation } from '@/hooks/useUserLocation';
+import { useFloodLocation } from '@/hooks/useFloodLocation';
+import InfoMessage from '../InfoMessage';
+import ConfirmFloodLocation from '../ConfirmFloodLocation';
+import Camera from '../Camera';
+import { useState } from 'react';
 
 const CustomMap = () => {
-  const [coordinate, setCoordinate] = useState<Coordinate>({ latitude: -23.5505, longitude: -46.6333 });
+  const { userLocation } = useUserLocation();
+  const {
+    floodLocationCoordinates,
+    handleMapPress,
+    selectedAddress,
+    markerAddressModal,
+    handleCancel,
+    handleConfirm
+  } = useFloodLocation();
 
-  const handleMapPress = (event: any) => {
-    const coordinate = event.nativeEvent.coordinate;
-    setCoordinate(coordinate);
+  const [isCameraVisible, setIsCameraVisible] = useState(true);
+
+  const openCamera = () => {
+    setIsCameraVisible(true);
+  };
+
+  const closeCamera = () => {
+    setIsCameraVisible(false);
   };
 
   return (
@@ -24,20 +36,32 @@ const CustomMap = () => {
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: coordinate.latitude,
-          longitude: coordinate.longitude,
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
         onPress={handleMapPress}
       >
-        <CustomMarker coordinate={coordinate} />
+        <InfoMessage text="Ajude a comunidade: marque áreas afetadas por enchentes." />
+        <CustomMarker coordinate={floodLocationCoordinates} />
 
         <FloodedAreas />
 
-        <UserLocation />
+        <UserLocation userLocation={userLocation} />
 
       </MapView>
+      <ConfirmFloodLocation
+        address={selectedAddress}
+        isVisible={markerAddressModal}
+        handleCancel={handleCancel}
+        handleConfirm={() => {
+          handleConfirm();
+          openCamera();
+        }}
+      />
+
+      {isCameraVisible && <Camera onClose={closeCamera} />}
     </View>
   );
 };
