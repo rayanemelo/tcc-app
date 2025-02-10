@@ -85,7 +85,6 @@ const FloodLevel = ({ isVisible, onClose }: Props) => {
 };
 
 const styles = StyleSheet.create({
-
   title: {
     fontSize: 17,
     marginVertical: 10,
@@ -106,7 +105,6 @@ const styles = StyleSheet.create({
     padding: 15,
     borderWidth: 3,
   },
-
   levelTitle: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -121,11 +119,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: '100%',
     gap: 10,
-  },
-
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
   },
 });
 

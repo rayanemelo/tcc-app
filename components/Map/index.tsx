@@ -10,6 +10,7 @@ import ConfirmFloodLocation from '../ConfirmFloodLocation';
 import Camera from '../Camera';
 import { useState } from 'react';
 import FloodLevel from '../FloodLevel';
+import Authentication from '../Authentication';
 
 const CustomMap = () => {
   const { userLocation } = useUserLocation();
@@ -51,7 +52,9 @@ const CustomMap = () => {
 
         <UserLocation userLocation={userLocation} />
 
-        <FloodLevel isVisible={true} onClose={()=> {}} />
+        <FloodLevel isVisible={false} onClose={() => { }} />
+        
+        <Authentication />
 
       </MapView>
       <ConfirmFloodLocation
