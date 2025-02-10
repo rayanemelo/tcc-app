@@ -1,23 +1,14 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import AntDesign from '@expo/vector-icons/AntDesign';
+ 
+type Props = TouchableOpacityProps & {
+  color?: string;
+};
 
-interface Props {
-  onClick: () => void;
-}
-
-const CloseButton = ({ onClick }: Props) => (
-  <TouchableOpacity onPress={onClick} style={styles.container}>
-    <AntDesign name="closecircle" size={28} color="white" />
+const CloseButton = ({ color = 'white', ...rest }: Props) => (
+  <TouchableOpacity {...rest}>
+    <AntDesign name="closecircle" size={28} color={color} />
   </TouchableOpacity>
 );
-
-
-const styles = StyleSheet.create({
-  container: {
-    // position: 'absolute',
-    // top: 65,
-    // left: 20,
-  },
-})
 
 export default CloseButton;

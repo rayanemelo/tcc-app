@@ -1,17 +1,18 @@
-import Button from "@/components/shared/Button";
-import CloseButton from "@/components/shared/CloseButton";
-import { Image, StyleSheet, Text, View } from "react-native";
+import Button from '@/components/shared/Button';
+import CloseButton from '@/components/shared/CloseButton';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 type Props = {
   photoUri: string | null;
   setPhotoUri: (uri: string | null) => void;
   onClose: () => void;
-}
+  sendPhoto: () => void;
+};
 
-const RenderPhoto = ({ photoUri, setPhotoUri, onClose }: Props) => (
+const RenderPhoto = ({ photoUri, setPhotoUri, onClose, sendPhoto }: Props) => (
   <View style={styles.photoContainer}>
     <View style={styles.closeButton}>
-      <CloseButton onClick={onClose} />
+      <CloseButton onPress={onClose} />
     </View>
     {photoUri ? (
       <Image source={{ uri: photoUri }} style={styles.capturedImage} />
@@ -22,32 +23,21 @@ const RenderPhoto = ({ photoUri, setPhotoUri, onClose }: Props) => (
         Enviar foto para comprovar o alagamento neste local
       </Text>
       <View style={styles.buttons}>
-        <Button type="outline" text="Tirar outra foto" onPress={() => setPhotoUri(null)} />
-        <Button type="filled" text="Enviar Foto" onPress={() => console.log('Enviar')} />
+        <Button
+          type="outline"
+          text="Tirar outra foto"
+          onPress={() => setPhotoUri(null)}
+        />
+        <Button type="filled" text="Enviar Foto" onPress={sendPhoto} />
       </View>
-
     </View>
   </View>
 );
 
-
 const styles = StyleSheet.create({
-  closeButton: { 
-    position: 'absolute',
-    top: 50,
-    left: 20,
-    zIndex: 1,
-  },
-  photoContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  capturedImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain',
-  },
+  closeButton: { position: 'absolute', top: 50, left: 20, zIndex: 1 },
+  photoContainer: { flex: 1, justifyContent: 'flex-end', alignItems: 'center' },
+  capturedImage: { width: '100%', height: '100%', resizeMode: 'contain' },
   modal: {
     position: 'absolute',
     display: 'flex',
@@ -60,25 +50,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#d3d3d3',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
     elevation: 5, // Elevação para Android
   },
-  text: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 25,
-  },
-  buttons: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-
+  text: { fontSize: 16, textAlign: 'center', marginBottom: 25 },
+  buttons: { flexDirection: 'row', gap: 10 },
 });
-
 
 export default RenderPhoto;

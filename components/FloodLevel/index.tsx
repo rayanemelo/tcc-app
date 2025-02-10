@@ -5,18 +5,10 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Entypo from '@expo/vector-icons/Entypo';
 import CustomAlert from '../shared/CustomAlert';
 
+type Props = { onClose: () => void; handleContinue: () => void };
 
-type Props = {
-  isVisible: boolean;
-  onClose: () => void;
-}
-
-const FloodLevel = ({ isVisible, onClose }: Props) => {
-  const [selectedLevel, setSelectedLevel] = useState<number | null>();
-
-  if (!isVisible) {
-    return null;
-  }
+const FloodLevel = ({ onClose, handleContinue }: Props) => {
+  const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
 
   const floodLevels = [
     {
@@ -25,7 +17,7 @@ const FloodLevel = ({ isVisible, onClose }: Props) => {
       description: 'Água cobrindo apenas a rua.',
       color: '#FFD65A',
       borderColor: '#FDE9AB',
-      icon: <Entypo name="water" size={22} color="white" />
+      icon: <Entypo name="water" size={22} color="white" />,
     },
     {
       id: 2,
@@ -33,7 +25,7 @@ const FloodLevel = ({ isVisible, onClose }: Props) => {
       description: 'Água invadindo calçadas e imóveis.',
       color: '#EFB036',
       borderColor: '#F5D699',
-      icon: <FontAwesome6 name="water" size={22} color="white" />
+      icon: <FontAwesome6 name="water" size={22} color="white" />,
     },
     {
       id: 3,
@@ -41,43 +33,54 @@ const FloodLevel = ({ isVisible, onClose }: Props) => {
       description: 'Impossível transitar pelo local.',
       color: '#D84040',
       borderColor: '#EA9E9E',
-      icon: <FontAwesome6 name="house-flood-water" size={22} color="white" />
+      icon: <FontAwesome6 name="house-flood-water" size={22} color="white" />,
     },
   ];
 
-  const handleContinue = () => {
-    console.log('Nível de enchente selecionado:', selectedLevel);
-  };
+  function handleSelectedLevel(level: number) {
+    if (selectedLevel === level) {
+      setSelectedLevel(null);
+      return;
+    }
+
+    setSelectedLevel(level);
+  }
 
   return (
     <CustomAlert>
       <Text style={styles.title}>Qual é o nível da enchente neste local?</Text>
-      {floodLevels.map(level => (
+      {floodLevels.map((level) => (
         <TouchableOpacity
           key={level.id}
           style={styles.levelButton}
-          onPress={() => setSelectedLevel(level.id)}
+          onPress={() => handleSelectedLevel(level.id)}
         >
-          <View style={[styles.levelIcon, { backgroundColor: level.color, borderColor: selectedLevel === level.id ? "#6E8E59" : level.borderColor }]}>
+          <View
+            style={[
+              styles.levelIcon,
+              {
+                backgroundColor: level.color,
+                borderColor:
+                  selectedLevel === level.id ? '#6E8E59' : level.borderColor,
+              },
+            ]}
+          >
             {level.icon}
           </View>
-          <View >
+          <View>
             <Text style={styles.levelTitle}>{level.title}</Text>
             <Text style={styles.levelDescription}>{level.description}</Text>
           </View>
         </TouchableOpacity>
       ))}
       <View style={styles.buttonContainer}>
-        <Button
-          text="Cancelar"
-          onPress={onClose}
-          type='outline' />
+        <Button text="Cancelar" onPress={onClose} type="outline" />
 
         <Button
           text="Continuar"
           onPress={handleContinue}
           disabled={selectedLevel === null}
-          type='filled'
+          type="filled"
         />
       </View>
     </CustomAlert>
@@ -100,19 +103,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 10,
   },
-  levelIcon: {
-    borderRadius: 100,
-    padding: 15,
-    borderWidth: 3,
-  },
-  levelTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  levelDescription: {
-    fontSize: 14,
-    color: '#555',
-  },
+  levelIcon: { borderRadius: 100, padding: 15, borderWidth: 3 },
+  levelTitle: { fontSize: 16, fontWeight: 'bold' },
+  levelDescription: { fontSize: 14, color: '#555' },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

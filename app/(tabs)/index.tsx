@@ -1,8 +1,10 @@
-import CustomMap from '@/components/Map';
+import { MarkerFloodProvider } from '@/context/MarkerFloodContext';
+import MapScreen from '@/screens/Map';
 
-export default function MapScreen() {
+export default function Screen() {
   return (
-    <CustomMap />
+    <MarkerFloodProvider>
+      <MapScreen />
+    </MarkerFloodProvider>
   );
 }
-

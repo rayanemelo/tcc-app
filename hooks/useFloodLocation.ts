@@ -1,18 +1,19 @@
-import { Coordinate } from "@/types/coordinate";
-import { useState } from "react";
-import { MapPressEvent } from "react-native-maps";
+import { Coordinate } from '@/types/coordinate';
+import { useState } from 'react';
+import { MapPressEvent } from 'react-native-maps';
 
 export function useFloodLocation() {
-  const [floodLocationCoordinates, setFloodLocationCoordinates] = useState<Coordinate | null>(null);
-  const [selectedAddress, setSelectedAddress] = useState('');
-  const [markerAddressModal, setMarkerAddressModal] = useState(false);
+  const [floodLocationCoordinates, setFloodLocationCoordinates] =
+    useState<Coordinate | null>(null); // Localização do ponto de enchente
+  const [selectedAddress, setSelectedAddress] = useState(''); // Endereço do ponto de enchente
+  const [markerAddressModal, setMarkerAddressModal] = useState(false); // Modal de confirmação de endereço
 
   function handleMapPress(event: MapPressEvent) {
     const coordinate = event.nativeEvent.coordinate;
     setFloodLocationCoordinates(coordinate);
-    
+
     getAddressFromCoordinates();
-  };
+  }
 
   function getAddressFromCoordinates() {
     setMarkerAddressModal(true);
@@ -22,12 +23,12 @@ export function useFloodLocation() {
   function handleConfirm() {
     setFloodLocationCoordinates(null);
     setMarkerAddressModal(false);
-  };
+  }
 
   function handleCancel() {
     setMarkerAddressModal(false);
     setFloodLocationCoordinates(null);
-  };
+  }
 
   return {
     floodLocationCoordinates,

@@ -1,20 +1,16 @@
-import InfoMessage from "@/components/InfoMessage";
-import CloseButton from "@/components/shared/CloseButton";
-import { CameraView } from "expo-camera";
-import { StyleSheet, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import InfoMessage from '@/components/InfoMessage';
+import CloseButton from '@/components/shared/CloseButton';
+import { CameraView } from 'expo-camera';
+import { StyleSheet, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-type Props = {
-  cameraRef: any;
-  onClose: () => void;
-  takePicture: () => void;
-}
+type Props = { cameraRef: any; onClose: () => void; takePicture: () => void };
 
 const RenderCamera = ({ cameraRef, onClose, takePicture }: Props) => (
-  <CameraView style={styles.camera} ref={cameraRef} facing='back'>
+  <CameraView style={styles.camera} ref={cameraRef} facing="back">
     <View style={styles.infos}>
-      <CloseButton onClick={onClose} />
+      <CloseButton onPress={onClose} style={styles.closeButton} />
       <InfoMessage text="Capture e envie uma imagem do alagamento para ajudar na verificação." />
     </View>
 
@@ -26,24 +22,16 @@ const RenderCamera = ({ cameraRef, onClose, takePicture }: Props) => (
   </CameraView>
 );
 
-
 const styles = StyleSheet.create({
-  infos: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
+  closeButton: { position: 'absolute', top: 50, left: 20, zIndex: 1 },
+  infos: { flexDirection: 'row', alignItems: 'center', paddingLeft: 36 },
   camera: {
     flex: 1,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  buttonContainer: {
-    marginBottom: 20,
-  },
- 
+  buttonContainer: { marginBottom: 20 },
 });
-
 
 export default RenderCamera;
