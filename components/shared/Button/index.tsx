@@ -1,22 +1,21 @@
 import { COLORS } from '@/styles/colors';
-import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 
-type Props = {
+type Props = TouchableOpacityProps & {
   type: 'outline' | 'filled';
-  onPress: () => void;
   text: string;
 };
 
-const Button = ({ type, onPress, text }: Props) => {
+const Button = ({ type, text,  ...rest }: Props) => {
   const buttonStyle = type === 'outline' ? styles.outline : styles.filled;
 
   return (
     <TouchableOpacity
       style={[styles.button, buttonStyle]}
-      onPress={onPress}
       activeOpacity={0.7}
       accessibilityRole="button"
       accessibilityLabel={text}
+      {...rest}
     >
       <Text style={type === 'outline' ? styles.outlineText : styles.filledText}>
         {text}

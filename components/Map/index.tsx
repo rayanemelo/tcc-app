@@ -9,6 +9,7 @@ import InfoMessage from '../InfoMessage';
 import ConfirmFloodLocation from '../ConfirmFloodLocation';
 import Camera from '../Camera';
 import { useState } from 'react';
+import FloodLevel from '../FloodLevel';
 
 const CustomMap = () => {
   const { userLocation } = useUserLocation();
@@ -21,7 +22,7 @@ const CustomMap = () => {
     handleConfirm
   } = useFloodLocation();
 
-  const [isCameraVisible, setIsCameraVisible] = useState(true);
+  const [isCameraVisible, setIsCameraVisible] = useState(false);
 
   const openCamera = () => {
     setIsCameraVisible(true);
@@ -50,10 +51,13 @@ const CustomMap = () => {
 
         <UserLocation userLocation={userLocation} />
 
+        <FloodLevel isVisible={true} onClose={()=> {}} />
+
       </MapView>
       <ConfirmFloodLocation
         address={selectedAddress}
-        isVisible={markerAddressModal}
+        // isVisible={markerAddressModal}
+        isVisible={false}
         handleCancel={handleCancel}
         handleConfirm={() => {
           handleConfirm();
