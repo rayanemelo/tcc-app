@@ -1,12 +1,11 @@
 import { useFloodLocation } from '@/hooks/useFloodLocation';
-import { Coordinate } from '@/types/coordinate';
 import { createContext, useContext } from 'react';
-import { MapPressEvent } from 'react-native-maps';
+import { MapPressEvent, LatLng } from 'react-native-maps';
 
 type MarkerFloodProps = {
   markerAddressModal: boolean;
   selectedAddress: string;
-  floodLocationCoordinates: Coordinate | null;
+  floodLocationCoordinates: LatLng | null;
   handleMapPress: (event: MapPressEvent) => void;
   handleCancel: () => void;
   handleConfirm: () => void;

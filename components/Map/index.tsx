@@ -1,15 +1,17 @@
-import { StyleSheet } from "react-native";
-import MapView from "react-native-maps";
-import CustomMarker from "./components/marker";
-import FloodedAreas from "./components/flooded-areas-marker";
-import UserLocation from "./components/user-location";
-import { useUserLocation } from "@/hooks/useUserLocation";
-import { useMarkerFlood } from "@/context/MarkerFloodContext";
+import { StyleSheet } from 'react-native';
+import MapView, { MapPressEvent } from 'react-native-maps';
+import CustomMarker from './components/marker';
+import FloodedAreas from './components/flooded-areas-marker';
+import UserLocation from './components/user-location';
+import { useUserLocation } from '@/hooks/useUserLocation';
+import { useMarkerFlood } from '@/context/MarkerFloodContext';
 
 const CustomMap = () => {
   const { userLocation } = useUserLocation();
   const { floodLocationCoordinates, handleMapPress } = useMarkerFlood();
-  
+
+  const coordinates = floodLocationCoordinates ?? { latitude: 0, longitude: 0 };
+
   return (
     <MapView
       style={styles.map}
@@ -19,19 +21,17 @@ const CustomMap = () => {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       }}
-      onPress={handleMapPress}
+      onPress={(e: MapPressEvent) => {
+        handleMapPress(e);
+      }}
     >
-      <CustomMarker coordinate={floodLocationCoordinates} />
+      <CustomMarker coordinate={coordinates} />
       <FloodedAreas />
       <UserLocation userLocation={userLocation} />
     </MapView>
   );
 };
 
-const styles = StyleSheet.create({
-  map: {
-    flex: 1,
-  },
-});
+const styles = StyleSheet.create({ map: { flex: 1 } });
 
 export default CustomMap;
