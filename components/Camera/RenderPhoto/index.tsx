@@ -1,5 +1,6 @@
 import Button from '@/components/shared/Button';
 import CloseButton from '@/components/shared/CloseButton';
+import { COLORS } from '@/styles/colors';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 type Props = {
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     padding: 25,
     marginHorizontal: 10,
     borderWidth: 1,
-    borderColor: '#d3d3d3',
+    borderColor: COLORS.gray,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,

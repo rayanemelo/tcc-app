@@ -2,6 +2,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import CustomAlert from '../shared/CustomAlert';
 import CloseButton from '../shared/CloseButton';
+import { COLORS } from '@/styles/colors';
 
 interface Props {
   close: () => void;
@@ -10,7 +11,11 @@ interface Props {
 const ErrorMessage = ({ close }: Props) => {
   return (
     <CustomAlert>
-      <CloseButton onPress={close} color="#d3d3d3" style={styles.closeButton} />
+      <CloseButton
+        onPress={close}
+        color={COLORS.gray}
+        style={styles.closeButton}
+      />
       <View style={styles.iconContainer}>
         <Ionicons name="close-circle-outline" size={75} color="#D84040" />
       </View>

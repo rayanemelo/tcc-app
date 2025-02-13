@@ -1,4 +1,5 @@
 import Button from '@/components/shared/Button';
+import { COLORS } from '@/styles/colors';
 import { useState, useRef, useEffect } from 'react';
 import {
   View,
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 15,
   },
-  resendText: { color: '#555', textAlign: 'center' },
+  resendText: { color: COLORS.grayDark, textAlign: 'center' },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

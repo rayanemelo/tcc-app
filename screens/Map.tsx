@@ -5,16 +5,20 @@ import FloodLevel from '@/components/FloodLevel';
 import InfoMessage from '@/components/InfoMessage';
 import CustomMap from '@/components/Map';
 import ErrorMessage from '@/components/Messages/error';
-import SuccessMessage from '@/components/Messages/sucess';
+import SuccessMessage from '@/components/Messages/success';
 import { useMarkerFlood } from '@/context/MarkerFloodContext';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 export default function MapScreen() {
-  const { markerAddressModal, selectedAddress, handleCancel, handleConfirm } =
-    useMarkerFlood();
-
-  const [currentStep, setCurrentStep] = useState(1);
+  const {
+    markerAddressModal,
+    selectedAddress,
+    handleCancel,
+    handleConfirm,
+    currentStep,
+    setCurrentStep,
+  } = useMarkerFlood();
 
   useEffect(() => {
     if (markerAddressModal) {
@@ -31,7 +35,7 @@ export default function MapScreen() {
   }
 
   const getStep = () => {
-    const steps: any = {
+    const steps: Record<number, React.ReactNode> = {
       1: (
         <InfoMessage text="Ajude a comunidade: marque áreas afetadas por enchentes." />
       ),

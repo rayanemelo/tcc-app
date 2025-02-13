@@ -4,6 +4,7 @@ import Button from '../shared/Button';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Entypo from '@expo/vector-icons/Entypo';
 import CustomAlert from '../shared/CustomAlert';
+import { COLORS } from '@/styles/colors';
 
 type Props = { onClose: () => void; handleContinue: () => void };
 
@@ -15,7 +16,7 @@ const FloodLevel = ({ onClose, handleContinue }: Props) => {
       id: 1,
       title: 'Leve',
       description: 'Água cobrindo apenas a rua.',
-      color: '#FFD65A',
+      color: COLORS.yellow,
       borderColor: '#FDE9AB',
       icon: <Entypo name="water" size={22} color="white" />,
     },
@@ -23,7 +24,7 @@ const FloodLevel = ({ onClose, handleContinue }: Props) => {
       id: 2,
       title: 'Moderado',
       description: 'Água invadindo calçadas e imóveis.',
-      color: '#EFB036',
+      color: COLORS.orange,
       borderColor: '#F5D699',
       icon: <FontAwesome6 name="water" size={22} color="white" />,
     },
@@ -31,7 +32,7 @@ const FloodLevel = ({ onClose, handleContinue }: Props) => {
       id: 3,
       title: 'Interditado',
       description: 'Impossível transitar pelo local.',
-      color: '#D84040',
+      color: COLORS.red,
       borderColor: '#EA9E9E',
       icon: <FontAwesome6 name="house-flood-water" size={22} color="white" />,
     },
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
   },
   levelIcon: { borderRadius: 100, padding: 15, borderWidth: 3 },
   levelTitle: { fontSize: 16, fontWeight: 'bold' },
-  levelDescription: { fontSize: 14, color: '#555' },
+  levelDescription: { fontSize: 14, color: COLORS.grayDark },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

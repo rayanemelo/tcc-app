@@ -36,5 +36,6 @@ export function useFloodLocation() {
     markerAddressModal,
     handleConfirm,
     handleCancel,
+    setFloodLocationCoordinates,
   };
 }

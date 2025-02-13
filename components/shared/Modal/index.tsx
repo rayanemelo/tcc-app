@@ -1,10 +1,11 @@
+import { COLORS } from '@/styles/colors';
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, Animated, Easing } from 'react-native';
+import { StyleSheet, Animated, Easing, ViewProps } from 'react-native';
 
-type Props = {
+type Props = ViewProps & {
   children: React.ReactNode;
   isVisible: boolean;
-}
+};
 
 const Modal = ({ children, isVisible }: Props) => {
   const animation = useRef(new Animated.Value(0)).current;
@@ -29,7 +30,9 @@ const Modal = ({ children, isVisible }: Props) => {
   });
 
   return (
-    <Animated.View style={[styles.modalContainer, { transform: [{ translateY }], opacity }]}>
+    <Animated.View
+      style={[styles.modalContainer, { transform: [{ translateY }], opacity }]}
+    >
       {children}
     </Animated.View>
   );
@@ -45,12 +48,13 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 25,
     borderWidth: 1,
-    borderColor: '#d3d3d3',
+    borderColor: COLORS.gray,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
     elevation: 5,
+    zIndex: 5,
   },
 });
 

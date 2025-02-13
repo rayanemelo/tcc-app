@@ -1,14 +1,17 @@
 import { useFloodLocation } from '@/hooks/useFloodLocation';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { MapPressEvent, LatLng } from 'react-native-maps';
 
 type MarkerFloodProps = {
-  markerAddressModal: boolean;
+  currentStep: number;
   selectedAddress: string;
+  markerAddressModal: boolean;
   floodLocationCoordinates: LatLng | null;
-  handleMapPress: (event: MapPressEvent) => void;
   handleCancel: () => void;
   handleConfirm: () => void;
+  setCurrentStep: (step: number) => void;
+  handleMapPress: (event: MapPressEvent) => void;
+  setFloodLocationCoordinates: (coordinates: LatLng | null) => void;
 };
 
 type MarkerFloodProviderProps = { children: JSX.Element | JSX.Element[] };
@@ -18,6 +21,9 @@ const MarkerFloodContext = createContext<MarkerFloodProps>(
 );
 
 export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
+  const [currentStep, setCurrentStep] = useState(1);
+  console.log('currentStep: ', currentStep);
+
   const {
     markerAddressModal,
     selectedAddress,
@@ -25,6 +31,7 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
     handleMapPress,
     handleCancel,
     handleConfirm,
+    setFloodLocationCoordinates,
   } = useFloodLocation();
 
   return (
@@ -36,6 +43,9 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
         handleMapPress,
         handleCancel,
         handleConfirm,
+        currentStep,
+        setCurrentStep,
+        setFloodLocationCoordinates,
       }}
     >
       {children}
