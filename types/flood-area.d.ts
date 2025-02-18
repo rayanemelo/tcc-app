@@ -7,4 +7,5 @@ export type FloodArea = {
   address: string;
   level: FloodLevel;
   createdAt: string;
+  images: string[];
 };
