@@ -88,6 +88,7 @@ export default function MapScreen() {
     <View style={styles.container}>
       <CustomMap />
       <View style={styles.main}>{getStep()}</View>
+      {/* <UserAlertFloodedArea address="Rua dos Bobos, nº 0" /> */}
     </View>
   );
 }
