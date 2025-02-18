@@ -62,7 +62,7 @@ const FloodLevel = ({ onClose, handleContinue }: Props) => {
               {
                 backgroundColor: level.color,
                 borderColor:
-                  selectedLevel === level.id ? '#6E8E59' : level.borderColor,
+                  selectedLevel === level.id ? COLORS.black : level.borderColor,
               },
             ]}
           >

@@ -1,36 +1,88 @@
 import { StyleSheet } from 'react-native';
-import MapView, { MapPressEvent } from 'react-native-maps';
+import MapView, { MapPressEvent, Region } from 'react-native-maps';
 import CustomMarker from './components/marker';
 import FloodedAreas from './components/flooded-areas-marker';
 import UserLocation from './components/user-location';
 import { useUserLocation } from '@/hooks/useUserLocation';
 import { useMarkerFlood } from '@/context/MarkerFloodContext';
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import AreaInfos from '../AreaInfos';
 import { FloodArea } from '@/types/flood-area';
 
 const CustomMap = () => {
   const { userLocation } = useUserLocation();
-  const { floodLocationCoordinates, handleMapPress, setCurrentStep } =
-    useMarkerFlood();
+  const {
+    floodLocationCoordinates,
+    handleMapPress,
+    handleCancel,
+    setCurrentStep,
+    currentStep,
+  } = useMarkerFlood();
 
   const [selectedArea, setSelectedArea] = useState<FloodArea | null>();
 
-  let coordinates = selectedArea
-    ? { latitude: 0, longitude: 0 }
-    : (floodLocationCoordinates ?? { latitude: 0, longitude: 0 });
+  const mapRef = useRef<MapView | null>(null);
+
+  const initialRegion = useMemo(() => {
+    return {
+      latitude: userLocation.latitude,
+      longitude: userLocation.longitude,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    };
+  }, []);
+
+  const coordinates = useMemo(() => {
+    return selectedArea
+      ? { latitude: selectedArea.latitude, longitude: selectedArea.longitude }
+      : (floodLocationCoordinates ?? { latitude: 0, longitude: 0 });
+  }, [selectedArea, floodLocationCoordinates]);
+
+  const animateToRegion = (region: Region) => {
+    if (mapRef.current) {
+      mapRef.current.animateToRegion(region, 500);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedArea) {
+      animateToRegion({
+        latitude: selectedArea.latitude,
+        longitude: selectedArea.longitude,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+      });
+    }
+  }, [selectedArea]);
+
+  useEffect(() => {
+    if (coordinates) {
+      animateToRegion({
+        latitude: coordinates.latitude,
+        longitude: coordinates.longitude,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+      });
+    }
+  }, [coordinates]);
+
+  useEffect(() => {
+    if (currentStep === 1) {
+      animateToRegion(initialRegion);
+    }
+  }, [currentStep, initialRegion]);
 
   return (
     <>
       <MapView
+        ref={mapRef}
         style={styles.map}
-        initialRegion={{
-          latitude: userLocation.latitude,
-          longitude: userLocation.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
+        initialRegion={initialRegion}
         onPress={(e: MapPressEvent) => {
+          if (selectedArea) {
+            return;
+          }
+
           handleMapPress(e);
         }}
       >
@@ -40,6 +92,7 @@ const CustomMap = () => {
           onAreaPress={(area) => {
             setSelectedArea(area);
             setCurrentStep(0);
+            handleCancel();
           }}
         />
 
@@ -51,7 +104,10 @@ const CustomMap = () => {
           area={selectedArea}
           onClose={() => {
             setSelectedArea(null);
-            // setCurrentStep(1);
+            setCurrentStep(1);
+            if (mapRef.current) {
+              mapRef.current.animateToRegion(initialRegion, 500);
+            }
           }}
         />
       )}

@@ -22,7 +22,6 @@ const MarkerFloodContext = createContext<MarkerFloodProps>(
 
 export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
   const [currentStep, setCurrentStep] = useState(1);
-  console.log('currentStep: ', currentStep);
 
   const {
     markerAddressModal,
