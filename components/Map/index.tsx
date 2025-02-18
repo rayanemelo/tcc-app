@@ -32,11 +32,7 @@ const CustomMap = () => {
     };
   }, []);
 
-  const coordinates = useMemo(() => {
-    return selectedArea
-      ? { latitude: selectedArea.latitude, longitude: selectedArea.longitude }
-      : (floodLocationCoordinates ?? { latitude: 0, longitude: 0 });
-  }, [selectedArea, floodLocationCoordinates]);
+  const coordinates = floodLocationCoordinates;
 
   const animateToRegion = (region: Region) => {
     if (mapRef.current) {
@@ -83,10 +79,11 @@ const CustomMap = () => {
             return;
           }
 
+          console.log('estou aqui');
           handleMapPress(e);
         }}
       >
-        <CustomMarker coordinate={coordinates} />
+        {coordinates && <CustomMarker coordinate={coordinates} />}
         <FloodedAreas
           selectedArea={selectedArea ?? null}
           onAreaPress={(area) => {

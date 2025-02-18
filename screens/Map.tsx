@@ -48,7 +48,6 @@ export default function MapScreen() {
             handleCancel();
           }}
           handleConfirm={() => {
-            handleConfirm();
             setCurrentStep(3);
           }}
         />
@@ -59,14 +58,26 @@ export default function MapScreen() {
           sendPhoto={() => nextStep()}
         />
       ),
-      4: <FloodLevel onClose={() => {}} handleContinue={() => nextStep()} />,
+      4: (
+        <FloodLevel
+          onClose={() => setCurrentStep(1)}
+          handleContinue={() => nextStep()}
+        />
+      ),
       5: (
         <Authentication
           handleCancel={() => setCurrentStep(1)}
           handleConfirm={send}
         />
       ),
-      6: <SuccessMessage close={() => setCurrentStep(1)} />,
+      6: (
+        <SuccessMessage
+          close={() => {
+            setCurrentStep(1);
+            handleConfirm();
+          }}
+        />
+      ),
       7: <ErrorMessage close={() => setCurrentStep(1)} />,
     };
 
