@@ -3,14 +3,18 @@ import { StyleSheet } from 'react-native';
 import ParallaxScrollView from '@/components/ui/ParallaxScrollView';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
+import PageTitle from '@/components/PageTitle';
 
-export default function AlertScreen() {
+export default function NotificationScreen() {
   return (
-    <ParallaxScrollView>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">alertas</ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <>
+      <PageTitle text="Notificações" />
+      <ParallaxScrollView>
+        <ThemedView style={styles.titleContainer}>
+          <ThemedText type="title">NotificationScreen</ThemedText>
+        </ThemedView>
+      </ParallaxScrollView>
+    </>
   );
 }
 
