@@ -4,12 +4,11 @@ import { COLORS } from '@/styles/colors';
 import { FloodArea } from '@/types/flood-area';
 import Tag from '../shared/Tag';
 import CloseButton from '../shared/CloseButton';
-import { formatDistanceToNow } from 'date-fns';
-import { ptBR } from 'date-fns/locale/pt-BR';
 import Feather from '@expo/vector-icons/Feather';
 import ImageCarousel from '../ImageCarousel';
 import { useState } from 'react';
 import { styles } from './styles';
+import { formatDate } from '@/utils/formatDate';
 
 type Props = {
   isVisible: boolean;
@@ -22,13 +21,8 @@ const AreaInfos = ({ isVisible, onClose, area }: Props) => {
 
   const [visibleImages, setVisibleImages] = useState(false);
 
-  const publishedDateRelativeToNow = formatDistanceToNow(
-    createdAt || new Date(),
-    {
-      locale: ptBR,
-      addSuffix: true,
-    }
-  );
+  const publishedDateRelativeToNow = formatDate(createdAt);
+
   return (
     <>
       <Modal isVisible={isVisible}>
