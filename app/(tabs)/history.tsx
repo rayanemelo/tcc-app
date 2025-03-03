@@ -10,7 +10,7 @@ export default function HistoryScreen() {
     <>
       <PageTitle text="Histórico" />
       <ParallaxScrollView>
-        <ThemedView style={styles.titleContainer}>
+        <ThemedView style={styles.container}>
           <ThemedText type="title">historico</ThemedText>
         </ThemedView>
       </ParallaxScrollView>
@@ -19,10 +19,10 @@ export default function HistoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  container: {
+    flexDirection: 'column',
     gap: 8,
-    padding: 65,
+    paddingBottom: 100,
+    paddingTop: 16,
   },
 });
