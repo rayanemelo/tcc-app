@@ -16,7 +16,6 @@ export default function MapScreen() {
 
   const {
     markerAddressModal,
-    selectedAddress,
     handleCancel,
     handleConfirm,
     currentStep,
@@ -54,7 +53,7 @@ export default function MapScreen() {
       ),
       2: (
         <ConfirmFloodLocation
-          address={selectedAddress}
+          // address={selectedAddress}
           isVisible={markerAddressModal}
           handleCancel={() => {
             setCurrentStep(1);

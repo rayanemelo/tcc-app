@@ -4,19 +4,23 @@ import { COLORS } from '@/styles/colors';
 import Button from '../shared/Button';
 
 type Props = {
-  address: string;
+  // address: string;
   isVisible: boolean;
   handleCancel: () => void;
   handleConfirm: () => void;
-}
+};
 
-const ConfirmFloodLocation = ({ address, isVisible, handleCancel, handleConfirm }: Props) => {
+const ConfirmFloodLocation = ({
+  isVisible,
+  handleCancel,
+  handleConfirm,
+}: Props) => {
   return (
     <Modal isVisible={isVisible}>
       <Text style={styles.title}>
         Deseja marcar este local como ponto de alagamento?
       </Text>
-      <Text style={styles.address}>{address}</Text>
+      {/* <Text style={styles.address}>{address}</Text> */}
       <View style={styles.buttonContainer}>
         <Button type="outline" onPress={handleCancel} text="Não" />
         <Button type="filled" onPress={handleConfirm} text="Sim" />
@@ -30,7 +34,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 30,
     color: COLORS.black,
   },
   address: {
@@ -43,7 +47,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 10,
   },
-
 });
 
 export default ConfirmFloodLocation;

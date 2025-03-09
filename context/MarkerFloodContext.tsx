@@ -5,7 +5,6 @@ import { MapPressEvent, LatLng } from 'react-native-maps';
 
 type MarkerFloodProps = {
   currentStep: number;
-  selectedAddress: string;
   markerAddressModal: boolean;
   floodLocationCoordinates: LatLng | null;
   floodAreaInfo: FloodAreaInfo | null;
@@ -29,7 +28,7 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
 
   const {
     markerAddressModal,
-    selectedAddress,
+
     floodLocationCoordinates,
     handleMapPress,
     handleCancel,
@@ -45,7 +44,7 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
         floodAreaInfo,
         setFloodAreaInfo,
         markerAddressModal,
-        selectedAddress,
+
         floodLocationCoordinates,
         handleMapPress,
         handleCancel,

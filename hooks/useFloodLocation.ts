@@ -5,25 +5,33 @@ import { LatLng, MapPressEvent } from 'react-native-maps';
 export function useFloodLocation() {
   const [floodLocationCoordinates, setFloodLocationCoordinates] =
     useState<LatLng | null>(null); // Localização do ponto de enchente
-  const [selectedAddress, setSelectedAddress] = useState(''); // Endereço do ponto de enchente
   const [markerAddressModal, setMarkerAddressModal] = useState(false); // Modal de confirmação de endereço
 
   const [floodAreaInfo, setFloodAreaInfo] = useState<FloodAreaInfo | null>(
     null
   );
-  console.log('floodAreaInfo: ', floodAreaInfo);
+  // console.log('floodAreaInfo: ', floodAreaInfo);
 
   function handleMapPress(event: MapPressEvent) {
     const coordinate = event.nativeEvent.coordinate;
+    console.log('coordinate: ', coordinate);
     setFloodLocationCoordinates(coordinate);
 
-    getAddressFromCoordinates();
+    if (coordinate) {
+      setMarkerAddressModal(true);
+      // fetchGeocoding(coordinate);
+    }
   }
 
-  function getAddressFromCoordinates() {
-    setMarkerAddressModal(true);
-    setSelectedAddress('Rua teste, 123');
-  }
+  // const fetchGeocoding = async (coordinate: LatLng) => {
+  //   const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinate.latitude},${coordinate.longitude}&key=${AUTH_KEY_GEOCONDING_API}`;
+  //   try {
+  //     const response = await API_GEOCODE.get(url);
+  //     console.log('response: ', response.data);
+  //   } catch (error) {
+  //     console.log('error: ', error);
+  //   }
+  // };
 
   function handleConfirm() {
     setFloodLocationCoordinates(null);
@@ -38,7 +46,6 @@ export function useFloodLocation() {
   return {
     floodLocationCoordinates,
     handleMapPress,
-    selectedAddress,
     markerAddressModal,
     handleConfirm,
     handleCancel,
