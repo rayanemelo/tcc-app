@@ -9,14 +9,13 @@ export interface INotification {
 
 export function useNotifications() {
   const [notifications, setNotifications] = useState<INotification[] | []>([]);
-  const [error, setError] = useState<unknown | null>(null);
 
   const fetchNotifications = async () => {
     try {
       const response = await API.get('/notification');
       setNotifications(response.data);
-    } catch (err: unknown) {
-      setError(err);
+    } catch {
+      setNotifications([]);
     }
   };
 
@@ -26,6 +25,5 @@ export function useNotifications() {
 
   return {
     notifications,
-    error,
   };
 }

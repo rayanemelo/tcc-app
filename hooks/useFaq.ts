@@ -10,14 +10,13 @@ export interface IFAQ {
 
 export function useFaqs() {
   const [faqs, setFaqs] = useState<IFAQ[] | []>([]);
-  const [error, setError] = useState<unknown | null>(null);
 
   const fetchFaqs = async () => {
     try {
       const response = await API.get('/faq');
       setFaqs(response.data);
-    } catch (err: unknown) {
-      setError(err);
+    } catch {
+      setFaqs([]);
     }
   };
 
@@ -27,6 +26,5 @@ export function useFaqs() {
 
   return {
     faqs,
-    error,
   };
 }

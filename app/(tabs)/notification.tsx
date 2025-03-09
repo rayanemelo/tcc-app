@@ -7,23 +7,14 @@ import PageTitle from '@/components/PageTitle';
 import { formatDate } from '@/utils/formatDate';
 import { COLORS } from '@/styles/colors';
 import { useNotifications } from '@/hooks/useNotifications';
+import CustomThemedView from '@/components/shared/CustomThemedView';
 
 export default function NotificationScreen() {
   const theme = useColorScheme() ?? 'light';
   const colorTheme = theme === 'light' ? COLORS.grayDark : COLORS.gray;
   const borderColor = theme === 'light' ? '#F2EEEE' : 'gray';
 
-  const { error, notifications } = useNotifications();
-
-  if (error) {
-    return (
-      <ThemedView style={styles.flex}>
-        <ThemedText style={{ color: colorTheme }}>
-          Erro ao carregar notificações
-        </ThemedText>
-      </ThemedView>
-    );
-  }
+  const { notifications } = useNotifications();
 
   const Notifications = () =>
     notifications.map((item) => (
@@ -46,11 +37,10 @@ export default function NotificationScreen() {
           {notifications.length > 0 ? (
             <Notifications />
           ) : (
-            <ThemedView style={styles.flex}>
-              <ThemedText style={{ color: colorTheme, marginTop: 46 }}>
-                Nenhuma notificação
-              </ThemedText>
-            </ThemedView>
+            <CustomThemedView
+              colorTheme={colorTheme}
+              text="Nenhuma notificação foi encontrada"
+            />
           )}
         </ThemedView>
       </ParallaxScrollView>

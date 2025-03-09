@@ -2,29 +2,19 @@ import { useState } from 'react';
 import { StyleSheet, useColorScheme } from 'react-native';
 
 import ParallaxScrollView from '@/components/ui/ParallaxScrollView';
-import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import PageTitle from '@/components/PageTitle';
 import { useFaqs } from '@/hooks/useFaq';
 import { COLORS } from '@/styles/colors';
 import Faqs from '@/components/Faq';
+import CustomThemedView from '@/components/shared/CustomThemedView';
 
 export default function FAQScreen() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const theme = useColorScheme() ?? 'light';
   const colorTheme = theme === 'light' ? COLORS.grayDark : COLORS.gray;
 
-  const { faqs, error } = useFaqs();
-
-  if (error) {
-    return (
-      <ThemedView style={styles.flex}>
-        <ThemedText style={{ color: colorTheme }}>
-          Erro ao carregar notificações
-        </ThemedText>
-      </ThemedView>
-    );
-  }
+  const { faqs } = useFaqs();
 
   return (
     <>
@@ -39,11 +29,10 @@ export default function FAQScreen() {
               setOpenIndex={setOpenIndex}
             />
           ) : (
-            <ThemedView style={styles.flex}>
-              <ThemedText style={{ color: colorTheme, marginTop: 46 }}>
-                Nenhuma pergunta foi encontrada
-              </ThemedText>
-            </ThemedView>
+            <CustomThemedView
+              colorTheme={colorTheme}
+              text="Nenhuma pergunta foi encontrada"
+            />
           )}
         </ThemedView>
       </ParallaxScrollView>
@@ -58,10 +47,5 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
     paddingTop: 16,
     paddingHorizontal: 16,
-  },
-  flex: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
