@@ -1,3 +1,4 @@
+import { FloodAreaInfo } from '@/types/flood-area-info';
 import { useState } from 'react';
 import { LatLng, MapPressEvent } from 'react-native-maps';
 
@@ -6,6 +7,11 @@ export function useFloodLocation() {
     useState<LatLng | null>(null); // Localização do ponto de enchente
   const [selectedAddress, setSelectedAddress] = useState(''); // Endereço do ponto de enchente
   const [markerAddressModal, setMarkerAddressModal] = useState(false); // Modal de confirmação de endereço
+
+  const [floodAreaInfo, setFloodAreaInfo] = useState<FloodAreaInfo | null>(
+    null
+  );
+  console.log('floodAreaInfo: ', floodAreaInfo);
 
   function handleMapPress(event: MapPressEvent) {
     const coordinate = event.nativeEvent.coordinate;
@@ -37,5 +43,7 @@ export function useFloodLocation() {
     handleConfirm,
     handleCancel,
     setFloodLocationCoordinates,
+    floodAreaInfo,
+    setFloodAreaInfo,
   };
 }

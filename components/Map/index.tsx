@@ -79,7 +79,6 @@ const CustomMap = () => {
             return;
           }
 
-          console.log('estou aqui');
           handleMapPress(e);
         }}
       >

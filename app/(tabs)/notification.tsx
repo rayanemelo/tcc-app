@@ -4,7 +4,7 @@ import ParallaxScrollView from '@/components/ui/ParallaxScrollView';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import PageTitle from '@/components/PageTitle';
-import { formatDate } from '@/utils/formatDate';
+import { formatDate } from '@/utils/functions/format-date';
 import { COLORS } from '@/styles/colors';
 import { useNotifications } from '@/hooks/useNotifications';
 import CustomThemedView from '@/components/shared/CustomThemedView';

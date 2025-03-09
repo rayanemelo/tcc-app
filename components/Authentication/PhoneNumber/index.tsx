@@ -1,14 +1,21 @@
 import Button from '@/components/shared/Button';
-import { useState } from 'react';
 import { View, Text } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import { styles } from './styles';
 
-type Props = { handleContinue: () => void; handleCancel: () => void };
+type Props = {
+  phoneNumber: string;
+  setPhoneNumber: (value: string) => void;
+  handleContinue: () => void;
+  handleCancel: () => void;
+};
 
-const PhoneNumber = ({ handleContinue, handleCancel }: Props) => {
-  const [phoneNumber, setPhoneNumber] = useState('');
-
+const PhoneNumber = ({
+  phoneNumber,
+  setPhoneNumber,
+  handleContinue,
+  handleCancel,
+}: Props) => {
   return (
     <View>
       <Text style={styles.title}>

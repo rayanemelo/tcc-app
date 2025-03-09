@@ -3,10 +3,19 @@ import { useState, useRef, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { styles } from './styles';
 
-type Props = { handleCancel: () => void; handleConfirm: () => void };
+type Props = {
+  code: string[];
+  setCode: (code: string[]) => void;
+  handleCancel: () => void;
+  handleConfirm: () => void;
+};
 
-const VerificationCode = ({ handleCancel, handleConfirm }: Props) => {
-  const [code, setCode] = useState(['', '', '', '', '', '']);
+const VerificationCode = ({
+  handleCancel,
+  handleConfirm,
+  code,
+  setCode,
+}: Props) => {
   const inputRefs = useRef<(TextInput | null)[]>([]);
   const [countdown, setCountdown] = useState(60);
   const [isCounting, setIsCounting] = useState(true);

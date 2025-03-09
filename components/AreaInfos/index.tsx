@@ -8,7 +8,7 @@ import Feather from '@expo/vector-icons/Feather';
 import ImageCarousel from '../ImageCarousel';
 import { useState } from 'react';
 import { styles } from './styles';
-import { formatDate } from '@/utils/formatDate';
+import { formatDate } from '@/utils/functions/format-date';
 
 type Props = {
   isVisible: boolean;

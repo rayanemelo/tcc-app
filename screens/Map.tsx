@@ -6,11 +6,14 @@ import InfoMessage from '@/components/InfoMessage';
 import CustomMap from '@/components/Map';
 import ErrorMessage from '@/components/Messages/error';
 import SuccessMessage from '@/components/Messages/success';
+import { useAuth } from '@/context/AuthContext';
 import { useMarkerFlood } from '@/context/MarkerFloodContext';
 import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 export default function MapScreen() {
+  const { authentication } = useAuth();
+
   const {
     markerAddressModal,
     selectedAddress,
@@ -18,6 +21,8 @@ export default function MapScreen() {
     handleConfirm,
     currentStep,
     setCurrentStep,
+    floodAreaInfo,
+    setFloodAreaInfo,
   } = useMarkerFlood();
 
   useEffect(() => {
@@ -32,6 +37,14 @@ export default function MapScreen() {
 
   function send() {
     setCurrentStep(6);
+  }
+
+  function validateAuthentication() {
+    if (authentication.authenticated) {
+      setCurrentStep(7);
+    } else {
+      setCurrentStep(5);
+    }
   }
 
   const getStep = () => {
@@ -56,12 +69,16 @@ export default function MapScreen() {
         <Camera
           onClose={() => setCurrentStep(1)}
           sendPhoto={() => nextStep()}
+          floodAreaInfo={floodAreaInfo}
+          setFloodAreaInfo={setFloodAreaInfo}
         />
       ),
       4: (
         <FloodLevel
           onClose={() => setCurrentStep(1)}
-          handleContinue={() => nextStep()}
+          handleContinue={() => validateAuthentication()}
+          floodAreaInfo={floodAreaInfo}
+          setFloodAreaInfo={setFloodAreaInfo}
         />
       ),
       5: (

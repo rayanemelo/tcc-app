@@ -31,10 +31,14 @@ const Button = ({ type, text, disabled, ...rest }: Props) => {
 
 const styles = StyleSheet.create({
   button: { flex: 1, borderRadius: 6, padding: 15 },
-  outline: { backgroundColor: 'white', borderWidth: 1, borderColor: '#D4DAE1' },
+  outline: {
+    backgroundColor: COLORS.white,
+    borderWidth: 1,
+    borderColor: '#D4DAE1',
+  },
   filled: { backgroundColor: COLORS.blue },
   outlineText: { color: COLORS.blue, textAlign: 'center' },
-  filledText: { color: 'white', textAlign: 'center' },
+  filledText: { color: COLORS.white, textAlign: 'center' },
 });
 
 export default Button;

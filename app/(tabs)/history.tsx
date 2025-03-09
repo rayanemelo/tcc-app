@@ -1,28 +1,43 @@
-import { StyleSheet } from 'react-native';
-
 import ParallaxScrollView from '@/components/ui/ParallaxScrollView';
-import { ThemedText } from '@/components/ui/ThemedText';
-import { ThemedView } from '@/components/ui/ThemedView';
+
 import PageTitle from '@/components/PageTitle';
+import { useAuth } from '@/context/AuthContext';
+import History from '@/screens/History';
+import AuthPrompt from '@/components/Authentication/AuthPrompt';
+import Authentication from '@/components/Authentication';
+import { useState } from 'react';
 
 export default function HistoryScreen() {
+  const { authentication } = useAuth();
+  const [auth, setAuth] = useState(false);
+  console.log('authentication: ', authentication);
+
+  const handleAuthenticate = () => {
+    setAuth(true);
+  };
+
   return (
     <>
       <PageTitle text="Histórico" />
-      <ParallaxScrollView>
-        <ThemedView style={styles.container}>
-          <ThemedText type="title">historico</ThemedText>
-        </ThemedView>
-      </ParallaxScrollView>
+
+      {!authentication.authenticated ? (
+        <>
+          <AuthPrompt onAuthenticate={handleAuthenticate} />
+
+          {auth && (
+            <Authentication
+              handleCancel={() => {
+                setAuth(false);
+              }}
+              handleConfirm={() => setAuth(false)}
+            />
+          )}
+        </>
+      ) : (
+        <ParallaxScrollView>
+          <History />
+        </ParallaxScrollView>
+      )}
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    gap: 8,
-    paddingBottom: 100,
-    paddingTop: 16,
-  },
-});

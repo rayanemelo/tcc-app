@@ -6,10 +6,21 @@ import Entypo from '@expo/vector-icons/Entypo';
 import CustomAlert from '../shared/CustomAlert';
 import { COLORS } from '@/styles/colors';
 import { styles } from './styles';
+import { FloodAreaInfo } from '@/types/flood-area-info';
 
-type Props = { onClose: () => void; handleContinue: () => void };
+type Props = {
+  floodAreaInfo: FloodAreaInfo | null;
+  setFloodAreaInfo: (data: FloodAreaInfo) => void;
+  onClose: () => void;
+  handleContinue: () => void;
+};
 
-const FloodLevel = ({ onClose, handleContinue }: Props) => {
+const FloodLevel = ({
+  floodAreaInfo,
+  setFloodAreaInfo,
+  onClose,
+  handleContinue,
+}: Props) => {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
 
   const floodLevels = [
@@ -46,6 +57,10 @@ const FloodLevel = ({ onClose, handleContinue }: Props) => {
     }
 
     setSelectedLevel(level);
+    setFloodAreaInfo({
+      ...floodAreaInfo,
+      status: floodLevels.find((item) => item.id === level)?.title,
+    });
   }
 
   return (

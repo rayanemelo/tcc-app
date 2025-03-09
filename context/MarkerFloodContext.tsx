@@ -1,4 +1,5 @@
 import { useFloodLocation } from '@/hooks/useFloodLocation';
+import { FloodAreaInfo } from '@/types/flood-area-info';
 import { createContext, useContext, useState } from 'react';
 import { MapPressEvent, LatLng } from 'react-native-maps';
 
@@ -7,6 +8,8 @@ type MarkerFloodProps = {
   selectedAddress: string;
   markerAddressModal: boolean;
   floodLocationCoordinates: LatLng | null;
+  floodAreaInfo: FloodAreaInfo | null;
+  setFloodAreaInfo: (data: FloodAreaInfo) => void;
   handleCancel: () => void;
   handleConfirm: () => void;
   setCurrentStep: (step: number) => void;
@@ -22,6 +25,7 @@ const MarkerFloodContext = createContext<MarkerFloodProps>(
 
 export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
   const [currentStep, setCurrentStep] = useState(1);
+  console.log('currentStep: ', currentStep);
 
   const {
     markerAddressModal,
@@ -31,11 +35,15 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
     handleCancel,
     handleConfirm,
     setFloodLocationCoordinates,
+    floodAreaInfo,
+    setFloodAreaInfo,
   } = useFloodLocation();
 
   return (
     <MarkerFloodContext.Provider
       value={{
+        floodAreaInfo,
+        setFloodAreaInfo,
         markerAddressModal,
         selectedAddress,
         floodLocationCoordinates,
