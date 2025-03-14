@@ -40,7 +40,7 @@ export default function MapScreen() {
 
   function validateAuthentication() {
     if (authentication.authenticated) {
-      setCurrentStep(7);
+      send();
     } else {
       setCurrentStep(5);
     }

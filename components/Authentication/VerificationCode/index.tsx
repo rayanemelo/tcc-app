@@ -1,55 +1,45 @@
 import Button from '@/components/shared/Button';
-import { useState, useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { styles } from './styles';
+import { useCountdown } from '@/hooks/useCountdown';
 
 type Props = {
-  code: string[];
-  setCode: (code: string[]) => void;
+  form: { phone: string; code: string[] };
+  setForm: (form: { phone: string; code: string[] }) => void;
   handleCancel: () => void;
   handleConfirm: () => void;
+  handleResend: () => void;
 };
 
 const VerificationCode = ({
+  form,
+  setForm,
   handleCancel,
   handleConfirm,
-  code,
-  setCode,
+  handleResend,
 }: Props) => {
   const inputRefs = useRef<(TextInput | null)[]>([]);
-  const [countdown, setCountdown] = useState(60);
-  const [isCounting, setIsCounting] = useState(true);
+  const { isCounting, setIsCounting, countdown } = useCountdown();
 
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-
-    if (isCounting && countdown > 0) {
-      timer = setInterval(() => {
-        setCountdown((prev) => prev - 1);
-      }, 1000);
-    } else if (countdown === 0) {
-      setIsCounting(false);
-      setCountdown(60); // Reseta o countdown
-    }
-
-    return () => clearInterval(timer); // Limpa o intervalo ao desmontar
-  }, [isCounting, countdown]);
-
-  const handleChange = (text: string, index: number) => {
-    const newCode = [...code];
+  function handleChange(text: string, index: number) {
+    const newCode = [...form.code];
     newCode[index] = text.replace(/\D/g, '');
-    setCode(newCode);
+    setForm({ ...form, code: newCode });
 
     // Move para o próximo campo se o dígito for preenchido
     if (text && index < 5) {
       inputRefs.current[index + 1]?.focus(); // Foca no próximo campo
     }
-  };
+  }
 
-  const handleResend = () => {
-    console.log('Código reenviado');
-    setIsCounting(true);
-  };
+  function tryAgain() {
+    if (!isCounting) {
+      setIsCounting(true);
+      handleResend();
+      console.log('Código reenviado');
+    }
+  }
 
   return (
     <View>
@@ -57,7 +47,7 @@ const VerificationCode = ({
         Enviaremos um código de 6 dígitos para o número informado
       </Text>
       <View style={styles.codeContainer}>
-        {code.map((digit, index) => (
+        {form.code.map((digit, index) => (
           <TextInput
             key={index}
             ref={(el) => (inputRefs.current[index] = el)}
@@ -71,13 +61,15 @@ const VerificationCode = ({
       </View>
       <View>
         <Text style={styles.resendText}>Não recebeu?</Text>
-        <TouchableOpacity onPress={handleResend} disabled={isCounting}>
+        {isCounting ? (
           <Text style={styles.resendText}>
-            {isCounting
-              ? `Tentar novamente em ${countdown} segundos`
-              : 'Tentar novamente'}
+            Tentar novamente em {countdown} segundos
           </Text>
-        </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={tryAgain}>
+            <Text style={styles.resendText}>Tentar novamente</Text>
+          </TouchableOpacity>
+        )}
       </View>
       <View style={styles.buttonContainer}>
         <Button text="Cancelar" onPress={handleCancel} type="outline" />
@@ -85,7 +77,7 @@ const VerificationCode = ({
           text="Confirmar"
           onPress={handleConfirm}
           type="filled"
-          disabled={code.includes('')}
+          disabled={form.code.includes('')}
         />
       </View>
     </View>

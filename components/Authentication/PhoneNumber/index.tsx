@@ -2,17 +2,18 @@ import Button from '@/components/shared/Button';
 import { View, Text } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import { styles } from './styles';
+import { cleanNumber } from '@/utils/functions/format-phone';
 
 type Props = {
-  phoneNumber: string;
-  setPhoneNumber: (value: string) => void;
+  form: { phone: string; code: string[] };
+  setForm: (form: { phone: string; code: string[] }) => void;
   handleContinue: () => void;
   handleCancel: () => void;
 };
 
 const PhoneNumber = ({
-  phoneNumber,
-  setPhoneNumber,
+  form,
+  setForm,
   handleContinue,
   handleCancel,
 }: Props) => {
@@ -25,8 +26,11 @@ const PhoneNumber = ({
       <TextInputMask
         style={styles.input}
         placeholder="(99) 99999-9999"
-        value={phoneNumber}
-        onChangeText={setPhoneNumber}
+        value={form.phone}
+        onChangeText={(phone) => {
+          const formattedPhone = cleanNumber(phone);
+          setForm({ ...form, phone: formattedPhone });
+        }}
         keyboardType="phone-pad"
         maxLength={15}
         type={'custom'}
@@ -39,7 +43,7 @@ const PhoneNumber = ({
           text="Continuar"
           onPress={handleContinue}
           type="filled"
-          disabled={phoneNumber.length < 15}
+          disabled={form.phone.length < 11}
         />
       </View>
     </View>

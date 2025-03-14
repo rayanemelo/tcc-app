@@ -1,77 +1,30 @@
-import { useState } from 'react';
 import CustomAlert from '../shared/CustomAlert';
 import PhoneNumber from './PhoneNumber';
 import VerificationCode from './VerificationCode';
-import { API } from '@/service/api';
-import { cleanNumber } from '@/utils/functions/format-phone';
-import { useAuth } from '@/context/AuthContext';
-import { useUserAccess } from '@/stores/user-access';
+import { useAuthComponent } from '@/hooks/useAuthComponent';
 
 type Props = { handleCancel: () => void; handleConfirm: () => void };
 
 const Authentication = ({ handleCancel, handleConfirm }: Props) => {
-  const { setAuthenticated } = useAuth();
-  const { setUser } = useUserAccess();
-
-  const [currentStep, setCurrentStep] = useState(1);
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [code, setCode] = useState(['', '', '', '', '', '']);
-
-  function nextStep() {
-    setCurrentStep(currentStep + 1);
-  }
-
-  function prevStep() {
-    setCurrentStep(currentStep - 1);
-  }
-
-  const sendCode = async () => {
-    try {
-      const phone = cleanNumber(phoneNumber);
-
-      const response = await API.post('/auth-user/send-sms', {
-        phone,
-      });
-
-      if (response.status === 204) {
-        nextStep();
-      }
-    } catch (e) {
-      console.log('e: ', e);
-    }
-  };
-
-  const verifyCode = async (code: string) => {
-    try {
-      const phone = cleanNumber(phoneNumber);
-
-      const response = await API.post('/auth-user/validate-code', {
-        phone,
-        code,
-      });
-
-      console.log('response: ', response.data);
-      if (response.status === 200) {
-        const { token, user } = response.data;
-        console.log('response.data: ', response.data);
-        setAuthenticated(token);
-        setUser(user);
-        handleConfirm();
-      }
-    } catch (e) {
-      console.log('e: ', e);
-    }
-  };
+  const {
+    form,
+    setForm,
+    prevStep,
+    authService,
+    currentStep,
+    handleContinue,
+    handleConfirmCode,
+  } = useAuthComponent();
 
   const getStep = () => {
-    const steps: any = {
+    const steps: Record<number, JSX.Element> = {
       1: (
         <PhoneNumber
-          phoneNumber={phoneNumber}
-          setPhoneNumber={setPhoneNumber}
+          form={form}
+          setForm={setForm}
           handleContinue={() => {
-            if (phoneNumber.length >= 15) {
-              sendCode();
+            if (form.phone.length >= 11) {
+              handleContinue();
             }
           }}
           handleCancel={handleCancel}
@@ -79,12 +32,15 @@ const Authentication = ({ handleCancel, handleConfirm }: Props) => {
       ),
       2: (
         <VerificationCode
-          code={code}
-          setCode={setCode}
+          form={form}
+          setForm={setForm}
           handleCancel={() => prevStep()}
           handleConfirm={() => {
-            const codeStr = code.join('');
-            verifyCode(codeStr);
+            handleConfirm();
+            handleConfirmCode();
+          }}
+          handleResend={async () => {
+            await authService.sendCode(form.phone);
           }}
         />
       ),
