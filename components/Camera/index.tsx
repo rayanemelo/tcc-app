@@ -5,21 +5,16 @@ import { useRef, useState } from 'react';
 import RenderCamera from './RenderCamera';
 import RenderPhoto from './RenderPhoto';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { FloodAreaInfo } from '@/types/flood-area-info';
+import { useFloodAreaForm } from '@/stores/flood-area-form';
 
 type Props = {
   onClose: () => void;
   sendPhoto: () => void;
-  floodAreaInfo: FloodAreaInfo | null;
-  setFloodAreaInfo: (data: FloodAreaInfo) => void;
 };
 
-const Camera = ({
-  onClose,
-  sendPhoto,
-  floodAreaInfo: floodAreaInfo,
-  setFloodAreaInfo: setFloodAreaInfo,
-}: Props) => {
+const Camera = ({ onClose, sendPhoto }: Props) => {
+  const { floodAreaForm, setFloodAreaForm } = useFloodAreaForm();
+
   const [permission] = useCameraPermissions();
   const cameraRef = useRef<any | null>();
   const [photoUri, setPhotoUri] = useState<string | null>();
@@ -36,9 +31,10 @@ const Camera = ({
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync({ quality: 0.5 });
       setPhotoUri(photo?.uri);
-      setFloodAreaInfo({
-        ...floodAreaInfo,
-        images: photo?.uri,
+
+      setFloodAreaForm({
+        ...floodAreaForm,
+        image: photo?.uri,
       });
     }
   }

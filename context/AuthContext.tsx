@@ -1,16 +1,12 @@
 import { useAuthentication } from '@/hooks/useAuthentication';
 import { createContext, useContext } from 'react';
 
-export type SetAuthenticatedParams = {
-  token: string;
-};
-
 type AuthProps = {
   authentication: {
     token: string;
     authenticated: boolean;
   };
-  setAuthenticated: (params: SetAuthenticatedParams) => void;
+  setAuthenticated: (token: string) => void;
   isLoading: boolean;
   signOut: () => void;
 };

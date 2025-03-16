@@ -7,14 +7,13 @@ import {
 import { useNativeLocalStorage } from './useNativeLocalStorage';
 import { useUserAccess } from '@/stores/user-access';
 import { User } from '@/types/user';
-import { SetAuthenticatedParams } from '@/context/AuthContext';
 
 const TOKEN_KEY = 'mytoken';
 
 export function useAuthentication() {
   const { storeData, getStoredData, deleteStoredData } =
     useNativeLocalStorage();
-  const { setUser } = useUserAccess();
+  const { setUser, resetUser } = useUserAccess();
   const [authentication, setAuthentication] = useState({
     token: '',
     authenticated: false,
@@ -45,7 +44,7 @@ export function useAuthentication() {
     }
   }
 
-  async function setAuthenticated({ token }: SetAuthenticatedParams) {
+  async function setAuthenticated(token: string) {
     const decoded = jwtDecode<JwtDecode>(token);
     const user: User = decoded.user;
 
@@ -57,8 +56,6 @@ export function useAuthentication() {
     });
 
     await storeData(TOKEN_KEY, token);
-
-    // to do something after authentication
   }
 
   async function signOut() {
@@ -67,6 +64,7 @@ export function useAuthentication() {
       authenticated: false,
     });
 
+    resetUser();
     await deleteStoredData(TOKEN_KEY);
   }
 

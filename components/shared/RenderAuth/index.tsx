@@ -10,6 +10,7 @@ type Props = {
 
 export function RenderAuth({ children }: Props) {
   const { authentication } = useAuth();
+
   const [auth, setAuth] = useState(false);
 
   const handleAuthenticate = () => {

@@ -11,12 +11,14 @@ import { FloodArea } from '@/types/flood-area';
 
 const CustomMap = () => {
   const { userLocation } = useUserLocation();
+
   const {
     floodLocationCoordinates,
     handleMapPress,
-    handleCancel,
+
     setCurrentStep,
     currentStep,
+    resetFloodedAreaMarking,
   } = useMarkerFlood();
 
   const [selectedArea, setSelectedArea] = useState<FloodArea | null>();
@@ -88,7 +90,7 @@ const CustomMap = () => {
           onAreaPress={(area) => {
             setSelectedArea(area);
             setCurrentStep(0);
-            handleCancel();
+            resetFloodedAreaMarking();
           }}
         />
 

@@ -1,9 +1,10 @@
+import { User } from '@/types/user';
 import CustomAlert from '../shared/CustomAlert';
 import PhoneNumber from './PhoneNumber';
 import VerificationCode from './VerificationCode';
 import { useAuthComponent } from '@/hooks/useAuthComponent';
 
-type Props = { handleCancel: () => void; handleConfirm: () => void };
+type Props = { handleCancel: () => void; handleConfirm: (data: User) => void };
 
 const Authentication = ({ handleCancel, handleConfirm }: Props) => {
   const {
@@ -35,9 +36,11 @@ const Authentication = ({ handleCancel, handleConfirm }: Props) => {
           form={form}
           setForm={setForm}
           handleCancel={() => prevStep()}
-          handleConfirm={() => {
-            handleConfirm();
-            handleConfirmCode();
+          handleConfirm={async () => {
+            const res = await handleConfirmCode();
+            if (res) {
+              await handleConfirm(res);
+            }
           }}
           handleResend={async () => {
             await authService.sendCode(form.phone);

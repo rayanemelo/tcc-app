@@ -8,20 +8,26 @@ import ErrorMessage from '@/components/Messages/error';
 import SuccessMessage from '@/components/Messages/success';
 import { useAuth } from '@/context/AuthContext';
 import { useMarkerFlood } from '@/context/MarkerFloodContext';
+import { FlooadAreaService } from '@/service/flood-area';
+import { useFloodAreaForm } from '@/stores/flood-area-form';
+import { useUserAccess } from '@/stores/user-access';
+import { User } from '@/types/user';
 import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
+
+const floodAreaService = new FlooadAreaService();
 
 export default function MapScreen() {
   const { authentication } = useAuth();
 
+  const { floodAreaForm } = useFloodAreaForm();
+  const { user } = useUserAccess();
+
   const {
     markerAddressModal,
-    handleCancel,
-    handleConfirm,
+    resetFloodedAreaMarking,
     currentStep,
     setCurrentStep,
-    floodAreaInfo,
-    setFloodAreaInfo,
   } = useMarkerFlood();
 
   useEffect(() => {
@@ -34,16 +40,38 @@ export default function MapScreen() {
     setCurrentStep(currentStep + 1);
   }
 
-  function send() {
-    setCurrentStep(6);
+  function returnToStepOne() {
+    resetFloodedAreaMarking();
+    setCurrentStep(1);
   }
 
-  function validateAuthentication() {
-    if (authentication.authenticated) {
-      send();
-    } else {
+  async function userIsAuthenticated() {
+    if (!authentication.authenticated) {
       setCurrentStep(5);
+
+      return;
     }
+
+    await send(user);
+  }
+
+  async function send(userData: User) {
+    const payload = {
+      ...floodAreaForm,
+      latitude: floodAreaForm.latitude.toString(),
+      longitude: floodAreaForm.longitude.toString(),
+      status: 'pending',
+      userId: userData.id,
+    };
+
+    const res = await floodAreaService.sendFlooadArea(payload);
+
+    if (res?.status === 201) {
+      setCurrentStep(6);
+    } else {
+      setCurrentStep(7);
+    }
+    return res;
   }
 
   const getStep = () => {
@@ -53,48 +81,31 @@ export default function MapScreen() {
       ),
       2: (
         <ConfirmFloodLocation
-          // address={selectedAddress}
           isVisible={markerAddressModal}
-          handleCancel={() => {
-            setCurrentStep(1);
-            handleCancel();
-          }}
-          handleConfirm={() => {
-            setCurrentStep(3);
-          }}
+          handleCancel={() => returnToStepOne()}
+          handleConfirm={() => nextStep()}
         />
       ),
       3: (
         <Camera
-          onClose={() => setCurrentStep(1)}
+          onClose={() => returnToStepOne()}
           sendPhoto={() => nextStep()}
-          floodAreaInfo={floodAreaInfo}
-          setFloodAreaInfo={setFloodAreaInfo}
         />
       ),
       4: (
         <FloodLevel
-          onClose={() => setCurrentStep(1)}
-          handleContinue={() => validateAuthentication()}
-          floodAreaInfo={floodAreaInfo}
-          setFloodAreaInfo={setFloodAreaInfo}
+          onClose={() => returnToStepOne()}
+          handleContinue={() => userIsAuthenticated()}
         />
       ),
       5: (
         <Authentication
-          handleCancel={() => setCurrentStep(1)}
-          handleConfirm={send}
+          handleCancel={() => returnToStepOne()}
+          handleConfirm={(data) => send(data)}
         />
       ),
-      6: (
-        <SuccessMessage
-          close={() => {
-            setCurrentStep(1);
-            handleConfirm();
-          }}
-        />
-      ),
-      7: <ErrorMessage close={() => setCurrentStep(1)} />,
+      6: <SuccessMessage close={() => returnToStepOne()} />,
+      7: <ErrorMessage close={() => returnToStepOne()} />,
     };
 
     return steps[currentStep];

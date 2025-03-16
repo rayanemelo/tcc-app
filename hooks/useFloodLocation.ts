@@ -1,56 +1,43 @@
-import { FloodAreaInfo } from '@/types/flood-area-info';
+import { useFloodAreaForm } from '@/stores/flood-area-form';
 import { useState } from 'react';
 import { LatLng, MapPressEvent } from 'react-native-maps';
 
+// const geocoding = new GeocondingService();
+
 export function useFloodLocation() {
+  const { floodAreaForm, setFloodAreaForm } = useFloodAreaForm();
+
   const [floodLocationCoordinates, setFloodLocationCoordinates] =
     useState<LatLng | null>(null); // Localização do ponto de enchente
   const [markerAddressModal, setMarkerAddressModal] = useState(false); // Modal de confirmação de endereço
 
-  const [floodAreaInfo, setFloodAreaInfo] = useState<FloodAreaInfo | null>(
-    null
-  );
-  // console.log('floodAreaInfo: ', floodAreaInfo);
-
-  function handleMapPress(event: MapPressEvent) {
+  async function handleMapPress(event: MapPressEvent) {
     const coordinate = event.nativeEvent.coordinate;
-    console.log('coordinate: ', coordinate);
     setFloodLocationCoordinates(coordinate);
 
     if (coordinate) {
       setMarkerAddressModal(true);
-      // fetchGeocoding(coordinate);
+      // const address = await geocoding.getAddress(coordinate);
+
+      setFloodAreaForm({
+        ...floodAreaForm,
+        longitude: coordinate.longitude,
+        latitude: coordinate.latitude,
+        address: 'rua teste',
+      });
     }
   }
 
-  // const fetchGeocoding = async (coordinate: LatLng) => {
-  //   const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinate.latitude},${coordinate.longitude}&key=${AUTH_KEY_GEOCONDING_API}`;
-  //   try {
-  //     const response = await API_GEOCODE.get(url);
-  //     console.log('response: ', response.data);
-  //   } catch (error) {
-  //     console.log('error: ', error);
-  //   }
-  // };
-
-  function handleConfirm() {
+  function resetFloodedAreaMarking() {
     setFloodLocationCoordinates(null);
     setMarkerAddressModal(false);
-  }
-
-  function handleCancel() {
-    setMarkerAddressModal(false);
-    setFloodLocationCoordinates(null);
   }
 
   return {
     floodLocationCoordinates,
     handleMapPress,
     markerAddressModal,
-    handleConfirm,
-    handleCancel,
+    resetFloodedAreaMarking,
     setFloodLocationCoordinates,
-    floodAreaInfo,
-    setFloodAreaInfo,
   };
 }
