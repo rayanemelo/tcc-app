@@ -10,8 +10,6 @@ import { useAuth } from '@/context/AuthContext';
 import { useMarkerFlood } from '@/context/MarkerFloodContext';
 import { FlooadAreaService } from '@/service/flood-area';
 import { useFloodAreaForm } from '@/stores/flood-area-form';
-import { useUserAccess } from '@/stores/user-access';
-import { User } from '@/types/user';
 import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -21,7 +19,6 @@ export default function MapScreen() {
   const { authentication } = useAuth();
 
   const { floodAreaForm } = useFloodAreaForm();
-  const { user } = useUserAccess();
 
   const {
     markerAddressModal,
@@ -52,16 +49,15 @@ export default function MapScreen() {
       return;
     }
 
-    await send(user);
+    await send();
   }
 
-  async function send(userData: User) {
+  async function send() {
     const payload = {
       ...floodAreaForm,
       latitude: floodAreaForm.latitude.toString(),
       longitude: floodAreaForm.longitude.toString(),
       status: 'pending',
-      userId: userData.id,
     };
 
     const res = await floodAreaService.sendFlooadArea(payload);
@@ -101,7 +97,7 @@ export default function MapScreen() {
       5: (
         <Authentication
           handleCancel={() => returnToStepOne()}
-          handleConfirm={(data) => send(data)}
+          handleConfirm={() => send()}
         />
       ),
       6: <SuccessMessage close={() => returnToStepOne()} />,

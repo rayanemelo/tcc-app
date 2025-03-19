@@ -10,7 +10,6 @@ export class GeocondingService {
       const response = await API_GEOCODE.get(url);
 
       const { results } = response.data as GeocodingResponse;
-      // console.log('response: ', results);
 
       return results[0].formatted_address;
     } catch (error) {

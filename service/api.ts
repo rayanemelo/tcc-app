@@ -1,7 +1,18 @@
+import { TOKEN_KEY } from '@/hooks/useAuthentication';
+import { useNativeLocalStorage } from '@/hooks/useNativeLocalStorage';
 import axios from 'axios';
 
 export const API = axios.create({
-  baseURL: `http://192.168.2.113:3331/api`,
+  baseURL: `http://192.168.2.106:3331/api`,
+});
+
+API.interceptors.request.use(async (config) => {
+  const { getStoredData } = useNativeLocalStorage();
+  const token = await getStoredData(TOKEN_KEY);
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 export const API_GEOCODE = axios.create({

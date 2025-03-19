@@ -1,14 +1,14 @@
 import { COLORS } from '@/styles/colors';
 import { FloodLevel } from '@/types/flood-level';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ViewProps } from 'react-native';
 
-type TagType = FloodLevel | 'analise' | 'concluido' | 'rejeitado';
+type TagType = FloodLevel | 4 | 5 | 6;
 
-interface Props {
+type Props = ViewProps & {
   type: TagType;
-}
+};
 
-const Tag = ({ type }: Props) => {
+const Tag = ({ type, ...rest }: Props) => {
   const types: Record<TagType, { color: string; label: string }> = {
     1: {
       color: COLORS.yellow,
@@ -22,22 +22,25 @@ const Tag = ({ type }: Props) => {
       color: COLORS.red,
       label: 'Interditado',
     },
-    analise: {
+    4: {
       color: '#40AAD8',
       label: 'Em análise',
     },
-    concluido: {
+    5: {
       color: COLORS.green,
       label: 'Concluído',
     },
-    rejeitado: {
+    6: {
       color: COLORS.red,
       label: 'Rejeitado',
     },
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: types[type].color }]}>
+    <View
+      style={[styles.container, { backgroundColor: types[type].color }]}
+      {...rest}
+    >
       <Text style={styles.label}>{types[type].label}</Text>
     </View>
   );
@@ -53,6 +56,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 14,
+    textAlign: 'center',
   },
 });
 

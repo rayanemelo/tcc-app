@@ -8,7 +8,7 @@ import { useNativeLocalStorage } from './useNativeLocalStorage';
 import { useUserAccess } from '@/stores/user-access';
 import { User } from '@/types/user';
 
-const TOKEN_KEY = 'mytoken';
+export const TOKEN_KEY = 'mytoken';
 
 export function useAuthentication() {
   const { storeData, getStoredData, deleteStoredData } =
