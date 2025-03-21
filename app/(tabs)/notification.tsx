@@ -3,7 +3,6 @@ import { StyleSheet, useColorScheme } from 'react-native';
 import ParallaxScrollView from '@/components/ui/ParallaxScrollView';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
-import PageTitle from '@/components/PageTitle';
 import { formatDate } from '@/utils/functions/format-date';
 import { COLORS } from '@/styles/colors';
 import { useNotifications } from '@/hooks/useNotifications';
@@ -30,21 +29,18 @@ export default function NotificationScreen() {
     ));
 
   return (
-    <>
-      <PageTitle text="Notificações" />
-      <ParallaxScrollView>
-        <ThemedView style={styles.container}>
-          {notifications.length > 0 ? (
-            <Notifications />
-          ) : (
-            <CustomThemedView
-              colorTheme={colorTheme}
-              text="Nenhuma notificação foi encontrada"
-            />
-          )}
-        </ThemedView>
-      </ParallaxScrollView>
-    </>
+    <ParallaxScrollView>
+      <ThemedView style={styles.container}>
+        {notifications.length > 0 ? (
+          <Notifications />
+        ) : (
+          <CustomThemedView
+            colorTheme={colorTheme}
+            text="Nenhuma notificação foi encontrada"
+          />
+        )}
+      </ThemedView>
+    </ParallaxScrollView>
   );
 }
 

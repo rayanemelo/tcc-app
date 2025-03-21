@@ -1,4 +1,5 @@
 export const COLORS = {
+  blackDefault: '#000',
   black: '#212121',
   blue: '#0F172A',
   lightBlue: '#007EA4',
@@ -9,4 +10,6 @@ export const COLORS = {
   grayDark: '#555',
   green: '#77B254',
   white: '#FFFFFF',
+  lightThemeBackground: '#F2F2F2',
+  darkThemeBackground: '#121212',
 };

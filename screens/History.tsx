@@ -7,7 +7,6 @@ import {
 
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
-import { useAuth } from '@/context/AuthContext';
 import { API } from '@/service/api';
 import { useEffect, useState } from 'react';
 import ParallaxScrollView from '@/components/ui/ParallaxScrollView';
@@ -15,6 +14,7 @@ import CustomThemedView from '@/components/shared/CustomThemedView';
 import { COLORS } from '@/styles/colors';
 import { formatDate } from '@/utils/functions/format-date';
 import Tag from '@/components/shared/Tag';
+import { useRouter } from 'expo-router';
 
 interface IHistory {
   id: 37;
@@ -32,7 +32,7 @@ export default function History() {
   const colorTheme = theme === 'light' ? COLORS.grayDark : COLORS.gray;
   const borderColor = theme === 'light' ? '#F2EEEE' : 'gray';
 
-  const { signOut } = useAuth();
+  const router = useRouter();
 
   const [history, setHistory] = useState<IHistory[] | []>([]);
 
@@ -64,43 +64,43 @@ export default function History() {
 
   const ListHistory = () =>
     history.map((item) => (
-      <ThemedView
+      <TouchableOpacity
         key={item.id}
-        style={[styles.history, { borderColor: borderColor }]}
+        onPress={() => router.push(`/history/${item.id}`)}
       >
-        <View style={styles.wrapper}>
-          <ThemedText>{item.address}</ThemedText>
-          <View>
-            <ThemedText style={[styles.createdAt, { color: colorTheme }]}>
-              {formatDate(item.createdAt)}
+        <ThemedView style={[styles.history, { borderColor: borderColor }]}>
+          <View style={styles.wrapper}>
+            <ThemedText
+              ellipsizeMode="tail"
+              numberOfLines={2}
+              style={styles.address}
+            >
+              {item.address}
             </ThemedText>
-            <Tag type={mapStatusToTagType(item.status)} />
+            <View>
+              <ThemedText style={[styles.createdAt, { color: colorTheme }]}>
+                {formatDate(item.createdAt)}
+              </ThemedText>
+              <Tag type={mapStatusToTagType(item.status)} />
+            </View>
           </View>
-        </View>
-      </ThemedView>
+        </ThemedView>
+      </TouchableOpacity>
     ));
 
   return (
-    <>
-      <ParallaxScrollView>
-        <ThemedView style={styles.container}>
-          {history.length > 0 ? (
-            <ListHistory />
-          ) : (
-            <CustomThemedView
-              colorTheme={colorTheme}
-              text="Nenhum histórico foi encontrado"
-            />
-          )}
-        </ThemedView>
-      </ParallaxScrollView>
-      <TouchableOpacity
-        onPress={() => signOut()}
-        style={{ padding: 8, backgroundColor: 'red' }}
-      >
-        <ThemedText>sair</ThemedText>
-      </TouchableOpacity>
-    </>
+    <ParallaxScrollView>
+      <ThemedView style={styles.container}>
+        {history.length > 0 ? (
+          <ListHistory />
+        ) : (
+          <CustomThemedView
+            colorTheme={colorTheme}
+            text="Nenhum histórico foi encontrado"
+          />
+        )}
+      </ThemedView>
+    </ParallaxScrollView>
   );
 }
 
@@ -119,9 +119,9 @@ const styles = StyleSheet.create({
   },
   address: {
     fontSize: 16,
-    paddingHorizontal: 16,
     color: COLORS.blue,
     flex: 1,
+    marginRight: 16,
   },
 
   history: {
@@ -131,6 +131,6 @@ const styles = StyleSheet.create({
   createdAt: {
     fontSize: 14,
     textAlign: 'right',
-    paddingHorizontal: 16,
+    marginBottom: 3,
   },
 });

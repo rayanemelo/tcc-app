@@ -7,10 +7,8 @@ type Props = ViewProps & {
 
 const CustomAlert = ({ children, ...rest }: Props) => {
   return (
-    <View style={styles.overlay}>
-      <View style={styles.container} {...rest}>
-        {children}
-      </View>
+    <View style={styles.overlay} {...rest}>
+      <View style={styles.container}>{children}</View>
     </View>
   );
 };

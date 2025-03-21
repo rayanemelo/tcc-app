@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     padding: 16,
+    marginTop: 120,
   },
   iconContainer: {
     paddingTop: 60,

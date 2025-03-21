@@ -3,6 +3,7 @@ import AuthPrompt from '@/components/Authentication/AuthPrompt';
 import ParallaxScrollView from '@/components/ui/ParallaxScrollView';
 import { useAuth } from '@/context/AuthContext';
 import { useState } from 'react';
+import { View } from 'react-native';
 
 type Props = {
   children: React.ReactNode;
@@ -18,7 +19,7 @@ export function RenderAuth({ children }: Props) {
   };
 
   return !authentication.authenticated ? (
-    <>
+    <View style={{ flex: 1, marginTop: -120 }}>
       <AuthPrompt onAuthenticate={handleAuthenticate} />
 
       {auth && (
@@ -27,9 +28,10 @@ export function RenderAuth({ children }: Props) {
             setAuth(false);
           }}
           handleConfirm={() => setAuth(false)}
+          // styles={{ marginTop: -100 }}
         />
       )}
-    </>
+    </View>
   ) : (
     <ParallaxScrollView>{children}</ParallaxScrollView>
   );

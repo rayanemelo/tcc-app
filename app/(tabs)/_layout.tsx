@@ -7,60 +7,95 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { AuthProvider } from '@/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { MarkerFloodProvider } from '@/context/MarkerFloodContext';
+import { COLORS } from '@/styles/colors';
+import { FaqIcon } from '@/components/shared/FaqIcon';
+import { SignOut } from '@/components/shared/SignOut';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { authentication } = useAuth();
 
   return (
-    <AuthProvider>
-      <MarkerFloodProvider>
-        <Tabs
-          screenOptions={{
-            tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+    <MarkerFloodProvider>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+          tabBarButton: HapticTab,
+          tabBarBackground: TabBarBackground,
+          tabBarStyle: Platform.select({
+            ios: {
+              // Use a transparent background on iOS to show the blur effect
+              position: 'absolute',
+            },
+            default: {},
+          }),
+        }}
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: 'Mapa',
             headerShown: false,
-            tabBarButton: HapticTab,
-            tabBarBackground: TabBarBackground,
-            tabBarStyle: Platform.select({
-              ios: {
-                // Use a transparent background on iOS to show the blur effect
-                position: 'absolute',
-              },
-              default: {},
-            }),
+            tabBarIcon: ({ color }) => (
+              <FontAwesome5 name="map-marker-alt" size={24} color={color} />
+            ),
           }}
-        >
-          <Tabs.Screen
-            name="index"
-            options={{
-              title: 'Mapa',
-              tabBarIcon: ({ color }) => (
-                <FontAwesome5 name="map-marker-alt" size={24} color={color} />
-              ),
-            }}
-          />
-          <Tabs.Screen
-            name="history"
-            options={{
-              title: 'Histórico',
-              tabBarIcon: ({ color }) => (
-                <FontAwesome name="folder" size={24} color={color} />
-              ),
-            }}
-          />
+        />
+        <Tabs.Screen
+          name="history"
+          options={{
+            title: 'Histórico',
+            headerTitle: 'HISTÓRICO',
+            tabBarIcon: ({ color }) => (
+              <FontAwesome name="folder" size={24} color={color} />
+            ),
+            headerStyle: {
+              backgroundColor:
+                colorScheme === 'light'
+                  ? COLORS.lightThemeBackground
+                  : COLORS.blackDefault,
+            },
+            headerTitleStyle: {
+              fontSize: 16,
+              color: colorScheme === 'light' ? COLORS.black : COLORS.white,
+              fontWeight: 'bold',
+            },
+            headerTintColor: COLORS.grayDark,
+            headerRight() {
+              if (!authentication.authenticated) return <></>;
+              return <SignOut />;
+            },
+          }}
+        />
 
-          <Tabs.Screen
-            name="notification"
-            options={{
-              title: 'Notificações',
-              tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="bell" size={24} color={color} />
-              ),
-            }}
-          />
-        </Tabs>
-      </MarkerFloodProvider>
-    </AuthProvider>
+        <Tabs.Screen
+          name="notification"
+          options={{
+            title: 'Notificações',
+            headerTitle: 'NOTIFICAÇÕES',
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="bell" size={24} color={color} />
+            ),
+            headerStyle: {
+              backgroundColor:
+                colorScheme === 'light'
+                  ? COLORS.lightThemeBackground
+                  : COLORS.blackDefault,
+            },
+            headerTitleStyle: {
+              fontSize: 16,
+              color: colorScheme === 'light' ? COLORS.black : COLORS.white,
+              fontWeight: 'bold',
+            },
+            headerTintColor: COLORS.grayDark,
+            headerRight() {
+              return <FaqIcon />;
+            },
+          }}
+        />
+      </Tabs>
+    </MarkerFloodProvider>
   );
 }
