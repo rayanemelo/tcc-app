@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { View, Image, Dimensions } from 'react-native';
+import { View, Image, Dimensions, ViewProps } from 'react-native';
 import Carousel, {
   ICarouselInstance,
   Pagination,
@@ -8,16 +8,18 @@ import { styles } from './styles';
 import { useSharedValue } from 'react-native-reanimated';
 import CloseButton from '../shared/CloseButton';
 
-type Props = {
+type Props = ViewProps & {
   images: string[];
   onClose: () => void;
 };
 
 const { width, height } = Dimensions.get('window');
 
-const ImageCarousel = ({ images, onClose }: Props) => {
+const ImageCarousel = ({ images, onClose, ...rest }: Props) => {
   const carouselRef = useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
+
+  if (!images.length) return null;
 
   const renderItem = ({ item }: { item: string }) => (
     <View>
@@ -26,7 +28,7 @@ const ImageCarousel = ({ images, onClose }: Props) => {
   );
 
   return (
-    <View style={styles.overlay}>
+    <View style={styles.overlay} {...rest}>
       <CloseButton onPress={onClose} style={styles.close} />
       <Carousel
         ref={carouselRef}

@@ -1,13 +1,20 @@
-import { FloodLevel } from './flood-level';
+export type Status = 'pending' | 'completed' | 'rejected';
 
 export type FloodArea = {
   id: number;
+  active: boolean;
   latitude: number;
   longitude: number;
   address: string;
-  level: FloodLevel;
   createdAt: string;
+  commentsAdmin?: string;
+  status: Status;
   images: string[];
+  floodLevelId: number;
+  noCount: number;
+  yesCount: number;
+  userId: number;
+  updatedAt: string;
 };
 
 export type FloodAreaForm = {

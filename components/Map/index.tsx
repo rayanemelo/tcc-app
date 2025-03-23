@@ -15,7 +15,6 @@ const CustomMap = () => {
   const {
     floodLocationCoordinates,
     handleMapPress,
-
     setCurrentStep,
     currentStep,
     resetFloodedAreaMarking,

@@ -1,14 +1,14 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import Modal from '../shared/Modal';
 import { COLORS } from '@/styles/colors';
 import { FloodArea } from '@/types/flood-area';
 import Tag from '../shared/Tag';
 import CloseButton from '../shared/CloseButton';
-import Feather from '@expo/vector-icons/Feather';
-import ImageCarousel from '../ImageCarousel';
 import { useState } from 'react';
 import { styles } from './styles';
 import { formatDate } from '@/utils/functions/format-date';
+import SeeImagens from '../shared/SeeImagensButton';
+import ImageCarousel from '../ImageCarousel';
 
 type Props = {
   isVisible: boolean;
@@ -20,6 +20,7 @@ const AreaInfos = ({ isVisible, onClose, area }: Props) => {
   const { address, createdAt } = area;
 
   const [visibleImages, setVisibleImages] = useState(false);
+  console.log('visibleImages: ', visibleImages);
 
   const publishedDateRelativeToNow = formatDate(createdAt);
 
@@ -35,15 +36,12 @@ const AreaInfos = ({ isVisible, onClose, area }: Props) => {
             <Text style={styles.createdAt}>
               Criado {publishedDateRelativeToNow}
             </Text>
-            <Tag type={area.level} />
+            <Tag type={area.floodLevelId} />
           </View>
-          <TouchableOpacity
-            style={styles.imagesButton}
+          <SeeImagens
             onPress={() => setVisibleImages(true)}
-          >
-            <Feather name="camera" size={18} color="black" />
-            <Text>Ver imagens</Text>
-          </TouchableOpacity>
+            text="Ver imagens"
+          />
         </View>
       </Modal>
       {visibleImages && (
