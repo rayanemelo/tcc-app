@@ -7,6 +7,7 @@ import { mapStatusToTagType } from '@/utils/functions/map-status-to-tag-type';
 import { formatCustomDate } from '@/utils/functions/format-custom-date';
 import SeeImagensButton from '@/components/shared/SeeImagensButton';
 import { useHistoryDetails } from '@/hooks/useHistoryDetails';
+import ImageCarousel from '@/components/ImageCarousel';
 
 export default function HistoryDetails() {
   const { history, setVisibleImages, visibleImages } = useHistoryDetails();
@@ -47,12 +48,12 @@ export default function HistoryDetails() {
           />
         </ThemedView>
       </ParallaxScrollView>
-      {/* {visibleImages && (
+      {visibleImages && history.images && (
         <ImageCarousel
           images={history.images}
           onClose={() => setVisibleImages(false)}
         />
-      )} */}
+      )}
     </>
   ) : (
     <></>

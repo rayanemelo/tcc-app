@@ -9,7 +9,7 @@ export type FloodArea = {
   createdAt: string;
   commentsAdmin?: string;
   status: Status;
-  images: string[];
+  images?: FloodAreaImage[];
   floodLevelId: number;
   noCount: number;
   yesCount: number;
@@ -24,4 +24,12 @@ export type FloodAreaForm = {
   latitude: number | string;
   status: string; //'pending' | 'approved' | 'rejected';
   floodLevelId: number;
+};
+
+export type FloodAreaImage = {
+  id: number;
+  floodAreaId: number;
+  url: string;
+  createdAt: string;
+  updatedAt: string;
 };

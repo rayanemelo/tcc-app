@@ -15,11 +15,11 @@ export const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
+    resizeMode: 'contain',
   },
   close: {
     position: 'absolute',
-    top: 70,
+    top: 50,
     right: 20,
   },
 });

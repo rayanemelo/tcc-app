@@ -1,9 +1,10 @@
 import InfoMessage from '@/components/InfoMessage';
 import CloseButton from '@/components/shared/CloseButton';
 import { CameraView } from 'expo-camera';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { styles } from '../styles';
 
 type Props = { cameraRef: any; onClose: () => void; takePicture: () => void };
 
@@ -21,17 +22,5 @@ const RenderCamera = ({ cameraRef, onClose, takePicture }: Props) => (
     </View>
   </CameraView>
 );
-
-const styles = StyleSheet.create({
-  closeButton: { position: 'absolute', top: 50, left: 20, zIndex: 1 },
-  infos: { flexDirection: 'row', alignItems: 'center', paddingLeft: 36 },
-  camera: {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  buttonContainer: { marginBottom: 20 },
-});
 
 export default RenderCamera;
