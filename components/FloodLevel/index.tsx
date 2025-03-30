@@ -7,6 +7,7 @@ import CustomAlert from '../shared/CustomAlert';
 import { COLORS } from '@/styles/colors';
 import { styles } from './styles';
 import { useFloodAreaForm } from '@/stores/flood-area-form';
+import { useMarkerFlood } from '@/context/MarkerFloodContext';
 
 type Props = {
   onClose: () => void;
@@ -17,6 +18,7 @@ const FloodLevel = ({ onClose, handleContinue }: Props) => {
   const { floodAreaForm, setFloodAreaForm } = useFloodAreaForm();
 
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
+  const { isLoading } = useMarkerFlood();
 
   const floodLevels = [
     {
@@ -94,6 +96,7 @@ const FloodLevel = ({ onClose, handleContinue }: Props) => {
           onPress={handleContinue}
           disabled={selectedLevel === null}
           type="filled"
+          isLoading={isLoading}
         />
       </View>
     </CustomAlert>

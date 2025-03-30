@@ -4,14 +4,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
+  ActivityIndicator,
 } from 'react-native';
 
 type Props = TouchableOpacityProps & {
   type: 'outline' | 'filled';
   text: string;
+  isLoading?: boolean;
 };
 
-const Button = ({ type, text, disabled, ...rest }: Props) => {
+const Button = ({ type, text, isLoading, disabled, ...rest }: Props) => {
   const buttonStyle = type === 'outline' ? styles.outline : styles.filled;
 
   return (
@@ -22,9 +24,15 @@ const Button = ({ type, text, disabled, ...rest }: Props) => {
       accessibilityLabel={text}
       {...rest}
     >
-      <Text style={type === 'outline' ? styles.outlineText : styles.filledText}>
-        {text}
-      </Text>
+      {isLoading ? (
+        <ActivityIndicator size="small" color="#fff" />
+      ) : (
+        <Text
+          style={type === 'outline' ? styles.outlineText : styles.filledText}
+        >
+          {text}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };

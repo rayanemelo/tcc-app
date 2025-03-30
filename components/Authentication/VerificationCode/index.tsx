@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { styles } from './styles';
 import { useCountdown } from '@/hooks/useCountdown';
+import { useMarkerFlood } from '@/context/MarkerFloodContext';
 
 type Props = {
   form: { phone: string; code: string[] };
@@ -21,6 +22,7 @@ const VerificationCode = ({
 }: Props) => {
   const inputRefs = useRef<(TextInput | null)[]>([]);
   const { isCounting, setIsCounting, countdown } = useCountdown();
+  const { isLoading } = useMarkerFlood();
 
   function handleChange(text: string, index: number) {
     const newCode = [...form.code];
@@ -78,6 +80,7 @@ const VerificationCode = ({
           onPress={handleConfirm}
           type="filled"
           disabled={form.code.includes('')}
+          isLoading={isLoading}
         />
       </View>
     </View>

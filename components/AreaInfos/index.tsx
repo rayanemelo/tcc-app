@@ -20,7 +20,6 @@ const AreaInfos = ({ isVisible, onClose, area }: Props) => {
   const { address, createdAt } = area;
 
   const [visibleImages, setVisibleImages] = useState(false);
-  console.log('visibleImages: ', visibleImages);
 
   const publishedDateRelativeToNow = formatDate(createdAt);
 

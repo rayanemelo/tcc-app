@@ -12,7 +12,6 @@ export default function History() {
   const colorTheme = theme === 'light' ? COLORS.grayDark : COLORS.gray;
 
   const { history } = useHistory();
-  console.log('history: ', history.length);
 
   return (
     <ParallaxScrollView>

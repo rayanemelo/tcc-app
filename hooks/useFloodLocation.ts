@@ -34,6 +34,7 @@ export function useFloodLocation() {
   }
 
   return {
+    floodAreaForm,
     floodLocationCoordinates,
     handleMapPress,
     markerAddressModal,

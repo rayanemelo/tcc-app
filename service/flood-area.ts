@@ -1,8 +1,18 @@
-import { FloodAreaForm, FloodAreaImage } from '@/types/flood-area';
+import { FloodArea, FloodAreaForm, FloodAreaImage } from '@/types/flood-area';
 import { API } from './api';
 
 export class FlooadAreaService {
-  public async sendFlooadArea(payload: FloodAreaForm) {
+  public async getActiveFloodArea(): Promise<FloodArea[] | null> {
+    try {
+      const res = await API.get('/flood-area/active');
+      return res.data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  public async sendFloodArea(payload: FloodAreaForm) {
     try {
       return await API.post('/flood-area', payload);
     } catch (error) {

@@ -64,7 +64,7 @@ export default function RootLayout() {
             options={{
               headerBackButtonDisplayMode: 'minimal',
               headerTintColor: COLORS.grayDark,
-              headerTitle: 'DETALHES DO HISTÓRICO',
+              headerTitle: 'DETALHES',
               headerStyle: {
                 backgroundColor:
                   colorScheme === 'light'

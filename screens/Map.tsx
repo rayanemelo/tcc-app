@@ -8,23 +8,18 @@ import ErrorMessage from '@/components/Messages/error';
 import SuccessMessage from '@/components/Messages/success';
 import { useAuth } from '@/context/AuthContext';
 import { useMarkerFlood } from '@/context/MarkerFloodContext';
-import { FlooadAreaService } from '@/service/flood-area';
-import { useFloodAreaForm } from '@/stores/flood-area-form';
 import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-const floodAreaService = new FlooadAreaService();
-
 export default function MapScreen() {
   const { authentication } = useAuth();
-
-  const { floodAreaForm } = useFloodAreaForm();
 
   const {
     markerAddressModal,
     resetFloodedAreaMarking,
     currentStep,
     setCurrentStep,
+    send,
   } = useMarkerFlood();
 
   useEffect(() => {
@@ -50,24 +45,6 @@ export default function MapScreen() {
     }
 
     await send();
-  }
-
-  async function send() {
-    const payload = {
-      ...floodAreaForm,
-      latitude: floodAreaForm.latitude.toString(),
-      longitude: floodAreaForm.longitude.toString(),
-      status: 'pending',
-    };
-
-    const res = await floodAreaService.sendFlooadArea(payload);
-
-    if (res?.status === 201) {
-      setCurrentStep(6);
-    } else {
-      setCurrentStep(7);
-    }
-    return res;
   }
 
   const getStep = () => {
