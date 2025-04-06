@@ -25,5 +25,5 @@ export function useUserLocation() {
 
   return {
     userLocation,
-  }
+  };
 }

@@ -1,5 +1,7 @@
 import { useFloodLocation } from '@/hooks/useFloodLocation';
+import { useUserLocation } from '@/hooks/useUserLocation';
 import { FlooadAreaService } from '@/service/flood-area';
+import { isWithinRadius } from '@/utils/functions/is-within-radius';
 import { createContext, useContext, useState } from 'react';
 import { MapPressEvent, LatLng } from 'react-native-maps';
 
@@ -12,10 +14,20 @@ type MarkerFloodProps = {
   resetFloodedAreaMarking: () => void;
   setCurrentStep: (step: number) => void;
   handleMapPress: (event: MapPressEvent) => void;
+  handleValidateLocation: () => boolean;
   setFloodLocationCoordinates: (coordinates: LatLng | null) => void;
 };
 
 type MarkerFloodProviderProps = { children: JSX.Element | JSX.Element[] };
+
+export const stepInfoMessage = 1;
+export const stepConfirmFloodLocation = 2;
+export const stepCamera = 3;
+export const stepFloodLevel = 4;
+export const stepAuthentication = 5;
+export const stepSuccess = 6;
+export const stepError = 7;
+export const stepNotWithinRadius = 8;
 
 const MarkerFloodContext = createContext<MarkerFloodProps>(
   {} as MarkerFloodProps
@@ -36,13 +48,34 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
     resetFloodedAreaMarking,
   } = useFloodLocation();
 
+  const { userLocation } = useUserLocation();
+
+  function handleValidateLocation() {
+    const coordinates = {
+      latArea: Number(floodAreaForm.latitude),
+      lonArea: Number(floodAreaForm.longitude),
+      latUser: Number(userLocation.latitude),
+      lonUser: Number(userLocation.longitude),
+    };
+    if (!isWithinRadius(coordinates)) {
+      setCurrentStep(stepNotWithinRadius);
+      return false;
+    }
+    return true;
+  }
+
   async function send() {
     setIsLoading(true);
+
     const payload = {
       ...floodAreaForm,
       latitude: floodAreaForm.latitude.toString(),
       longitude: floodAreaForm.longitude.toString(),
       status: 'pending',
+      userLocation: {
+        latitude: userLocation.latitude.toString(),
+        longitude: userLocation.longitude.toString(),
+      },
     };
 
     const res = await floodAreaService.sendFloodArea(payload);
@@ -50,9 +83,9 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
     setIsLoading(false);
 
     if (res?.status === 201) {
-      setCurrentStep(6);
+      setCurrentStep(stepSuccess);
     } else {
-      setCurrentStep(7);
+      setCurrentStep(stepError);
     }
     return res;
   }
@@ -69,6 +102,7 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
         setFloodLocationCoordinates,
         resetFloodedAreaMarking,
         isLoading,
+        handleValidateLocation,
       }}
     >
       {children}

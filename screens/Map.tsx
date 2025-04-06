@@ -6,8 +6,14 @@ import InfoMessage from '@/components/InfoMessage';
 import CustomMap from '@/components/Map';
 import ErrorMessage from '@/components/Messages/error';
 import SuccessMessage from '@/components/Messages/success';
+import { NotWithinRadius } from '@/components/NotWithinRadius';
 import { useAuth } from '@/context/AuthContext';
-import { useMarkerFlood } from '@/context/MarkerFloodContext';
+import {
+  stepAuthentication,
+  stepConfirmFloodLocation,
+  stepNotWithinRadius,
+  useMarkerFlood,
+} from '@/context/MarkerFloodContext';
 import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -20,16 +26,28 @@ export default function MapScreen() {
     currentStep,
     setCurrentStep,
     send,
+    handleValidateLocation,
   } = useMarkerFlood();
 
   useEffect(() => {
     if (markerAddressModal) {
-      setCurrentStep(2);
+      setCurrentStep(stepConfirmFloodLocation);
     }
   }, [markerAddressModal]);
 
   function nextStep() {
     setCurrentStep(currentStep + 1);
+  }
+
+  function handleConfirmFloodLocation() {
+    const isValidLocation = handleValidateLocation();
+
+    if (!isValidLocation) {
+      setCurrentStep(stepNotWithinRadius);
+      return;
+    }
+
+    nextStep();
   }
 
   function returnToStepOne() {
@@ -39,7 +57,7 @@ export default function MapScreen() {
 
   async function userIsAuthenticated() {
     if (!authentication.authenticated) {
-      setCurrentStep(5);
+      setCurrentStep(stepAuthentication);
 
       return;
     }
@@ -56,7 +74,7 @@ export default function MapScreen() {
         <ConfirmFloodLocation
           isVisible={markerAddressModal}
           handleCancel={() => returnToStepOne()}
-          handleConfirm={() => nextStep()}
+          handleConfirm={() => handleConfirmFloodLocation()}
         />
       ),
       3: (
@@ -79,6 +97,7 @@ export default function MapScreen() {
       ),
       6: <SuccessMessage close={() => returnToStepOne()} />,
       7: <ErrorMessage close={() => returnToStepOne()} />,
+      8: <NotWithinRadius close={() => returnToStepOne()} />,
     };
 
     return steps[currentStep];

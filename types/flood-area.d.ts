@@ -24,6 +24,10 @@ export type FloodAreaForm = {
   latitude: number | string;
   status: string; //'pending' | 'approved' | 'rejected';
   floodLevelId: number;
+  userLocation: {
+    latitude: number | string;
+    longitude: number | string;
+  };
 };
 
 export type FloodAreaImage = {
