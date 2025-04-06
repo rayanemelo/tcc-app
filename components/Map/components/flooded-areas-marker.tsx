@@ -12,7 +12,6 @@ type Props = {
 
 const FloodedAreas = ({ selectedArea, onAreaPress }: Props) => {
   const { floodedAreas } = useFloodedAreas();
-  console.log('floodedAreas: ', floodedAreas.length);
   // console.log('floodedAreas: ', floodedAreas);
 
   return floodedAreas?.map((area, index) => (

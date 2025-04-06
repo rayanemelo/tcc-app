@@ -37,6 +37,7 @@ export function useFloodedAreas() {
 
   return {
     floodedAreas,
+    publicFloodedAreas: publicQuery.data || [],
     isLoading: publicQuery.isLoading || userQuery.isLoading,
     error: publicQuery.error || userQuery.error,
   };

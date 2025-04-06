@@ -26,12 +26,12 @@ const CustomMap = () => {
 
   const initialRegion = useMemo(() => {
     return {
-      latitude: userLocation.latitude,
-      longitude: userLocation.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
+      latitude: userLocation?.latitude ?? -14.235,
+      longitude: userLocation?.longitude ?? -51.9253,
+      latitudeDelta: userLocation?.latitude ? 0.0922 : 20.0,
+      longitudeDelta: userLocation?.longitude ? 0.0421 : 30.0,
     };
-  }, []);
+  }, [userLocation]);
 
   const coordinates = floodLocationCoordinates;
 

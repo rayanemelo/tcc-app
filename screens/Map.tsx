@@ -3,15 +3,16 @@ import Camera from '@/components/Camera';
 import ConfirmFloodLocation from '@/components/ConfirmFloodLocation';
 import FloodLevel from '@/components/FloodLevel';
 import InfoMessage from '@/components/InfoMessage';
+import { LocationAccess } from '@/components/LocationAccess';
 import CustomMap from '@/components/Map';
 import ErrorMessage from '@/components/Messages/error';
 import SuccessMessage from '@/components/Messages/success';
 import { NotWithinRadius } from '@/components/NotWithinRadius';
+import UserAlertFloodedArea from '@/components/UserAlertFloodedArea';
 import { useAuth } from '@/context/AuthContext';
 import {
   stepAuthentication,
   stepConfirmFloodLocation,
-  stepNotWithinRadius,
   useMarkerFlood,
 } from '@/context/MarkerFloodContext';
 import { useEffect } from 'react';
@@ -43,7 +44,6 @@ export default function MapScreen() {
     const isValidLocation = handleValidateLocation();
 
     if (!isValidLocation) {
-      setCurrentStep(stepNotWithinRadius);
       return;
     }
 
@@ -98,6 +98,7 @@ export default function MapScreen() {
       6: <SuccessMessage close={() => returnToStepOne()} />,
       7: <ErrorMessage close={() => returnToStepOne()} />,
       8: <NotWithinRadius close={() => returnToStepOne()} />,
+      9: <LocationAccess close={() => returnToStepOne()} />,
     };
 
     return steps[currentStep];
@@ -107,7 +108,7 @@ export default function MapScreen() {
     <View style={styles.container}>
       <CustomMap />
       <View style={styles.main}>{getStep()}</View>
-      {/* <UserAlertFloodedArea address="Rua dos Bobos, nº 0" /> */}
+      <UserAlertFloodedArea address="Rua dos Bobos, nº 0" />
     </View>
   );
 }

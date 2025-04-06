@@ -1,16 +1,20 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, useColorScheme, View } from 'react-native';
 
 import { useNotifications } from '@/hooks/useNotifications';
 import CustomThemedView from '@/components/shared/CustomThemedView';
-import { ListNotification } from '@/components/ListNotification';
+import { ListNotifications } from '@/components/ListNotification';
+import { COLORS } from '@/styles/colors';
 
 export default function NotificationScreen() {
   const { notifications } = useNotifications();
 
+  const theme = useColorScheme() ?? 'light';
+  const colorTheme = theme === 'light' ? COLORS.white : COLORS.black;
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colorTheme }]}>
       {notifications.length > 0 ? (
-        <ListNotification />
+        <ListNotifications />
       ) : (
         <CustomThemedView text="Nenhuma notificação foi encontrada" />
       )}
@@ -20,6 +24,6 @@ export default function NotificationScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: '100%',
   },
 });

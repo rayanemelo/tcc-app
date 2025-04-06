@@ -21,7 +21,7 @@ export default function CustomThemedView({ text, ...rest }: Props) {
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: 50,
   },
 });

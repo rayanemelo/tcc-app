@@ -28,6 +28,7 @@ export const stepAuthentication = 5;
 export const stepSuccess = 6;
 export const stepError = 7;
 export const stepNotWithinRadius = 8;
+export const stepLocationAccess = 9;
 
 const MarkerFloodContext = createContext<MarkerFloodProps>(
   {} as MarkerFloodProps
@@ -51,12 +52,18 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
   const { userLocation } = useUserLocation();
 
   function handleValidateLocation() {
+    if (!userLocation) {
+      setCurrentStep(stepLocationAccess);
+      return false;
+    }
+
     const coordinates = {
       latArea: Number(floodAreaForm.latitude),
       lonArea: Number(floodAreaForm.longitude),
       latUser: Number(userLocation.latitude),
       lonUser: Number(userLocation.longitude),
     };
+
     if (!isWithinRadius(coordinates)) {
       setCurrentStep(stepNotWithinRadius);
       return false;
@@ -66,6 +73,11 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
 
   async function send() {
     setIsLoading(true);
+
+    if (!userLocation) {
+      setIsLoading(false);
+      return;
+    }
 
     const payload = {
       ...floodAreaForm,

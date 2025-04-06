@@ -7,7 +7,7 @@ import { INotification, useNotifications } from '@/hooks/useNotifications';
 import { COLORS } from '@/styles/colors';
 import { FlatList, RefreshControl } from 'react-native-gesture-handler';
 
-export function ListNotification() {
+export function ListNotifications() {
   const theme = useColorScheme() ?? 'light';
 
   const colorTheme = theme === 'light' ? COLORS.grayDark : COLORS.gray;
@@ -31,20 +31,17 @@ export function ListNotification() {
         <RefreshControl refreshing={isFetching} onRefresh={refetch} />
       }
       renderItem={renderItem}
-      contentContainerStyle={{ paddingBottom: 80 /* , paddingTop: 10 */ }}
+      contentContainerStyle={{ paddingBottom: 80 }}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   notification: {
     borderBottomWidth: 1,
     justifyContent: 'center',
     paddingHorizontal: 16,
-    paddingBottom: 12,
+    paddingBottom: 15,
     paddingTop: 8,
   },
   createdAt: {
