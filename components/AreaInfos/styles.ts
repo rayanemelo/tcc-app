@@ -22,4 +22,10 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     color: COLORS.grayDark,
   },
+  pendingText: {
+    fontSize: 16,
+    // textAlign: 'center',
+    color: COLORS.grayDark,
+    // maxWidth: '90%',
+  },
 });

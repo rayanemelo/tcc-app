@@ -1,28 +1,43 @@
+import { useQuery } from '@tanstack/react-query';
 import { FlooadAreaService } from '@/service/flood-area';
 import { FloodArea } from '@/types/flood-area';
-import { useEffect, useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 const floodAreaService = new FlooadAreaService();
 
 export function useFloodedAreas() {
-  const [floodedAreas, setFloodedAreas] = useState<FloodArea[]>([]);
+  const { authentication } = useAuth();
 
-  async function getActiveFloodArea() {
-    const res = await floodAreaService.getActiveFloodArea();
+  const publicQuery = useQuery({
+    queryKey: ['public-flood-areas'],
+    queryFn: () => floodAreaService.getActiveFloodArea(),
+  });
 
-    if (!res) {
-      setFloodedAreas([]);
-      return;
-    }
+  const userQuery = useQuery({
+    queryKey: ['user-flood-areas'],
+    queryFn: () => floodAreaService.getPendingFloodAreaByUserId(),
+    enabled: authentication.authenticated,
+  });
 
-    setFloodedAreas(res);
-  }
+  useFocusEffect(
+    useCallback(() => {
+      publicQuery.refetch();
+      if (authentication.authenticated) {
+        userQuery.refetch();
+      }
+    }, [authentication.authenticated, publicQuery, userQuery])
+  );
 
-  useEffect(() => {
-    getActiveFloodArea();
-  }, []);
+  const floodedAreas: FloodArea[] = [
+    ...(publicQuery.data || []),
+    ...(authentication.authenticated ? userQuery.data || [] : []),
+  ];
 
   return {
     floodedAreas,
+    isLoading: publicQuery.isLoading || userQuery.isLoading,
+    error: publicQuery.error || userQuery.error,
   };
 }

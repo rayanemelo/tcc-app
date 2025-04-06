@@ -1,8 +1,8 @@
+import { useQuery } from '@tanstack/react-query';
 import { API } from '@/service/api';
 import { Status } from '@/types/flood-area';
-import { useEffect, useState } from 'react';
 
-interface IHistory {
+export interface IHistory {
   id: number;
   address: string;
   latitude: string;
@@ -13,27 +13,24 @@ interface IHistory {
   createdAt: string;
 }
 
+async function fetchUserHistory(): Promise<IHistory[]> {
+  const response = await API.get('/user-history');
+  return response.data;
+}
+
 export function useHistory() {
-  const [history, setHistory] = useState<IHistory[] | []>([]);
-
-  async function getHistory() {
-    try {
-      const response = await API.get('/user-history');
-      setHistory(response.data);
-    } catch {
-      setHistory([]);
-    }
-  }
-
-  const listSortedByDate = history.sort((a, b) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  const query = useQuery<IHistory[]>({
+    queryKey: ['user-history'],
+    queryFn: fetchUserHistory,
   });
 
-  useEffect(() => {
-    getHistory();
-  }, []);
+  const sortedData =
+    query.data?.sort((a, b) => {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }) ?? [];
 
   return {
-    history: listSortedByDate,
+    history: sortedData,
+    ...query,
   };
 }

@@ -1,13 +1,16 @@
-import { StyleSheet, ViewProps } from 'react-native';
+import { StyleSheet, useColorScheme, ViewProps } from 'react-native';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
+import { COLORS } from '@/styles/colors';
 
 type Props = ViewProps & {
-  colorTheme: string;
   text: string;
 };
 
-export default function CustomThemedView({ colorTheme, text, ...rest }: Props) {
+export default function CustomThemedView({ text, ...rest }: Props) {
+  const theme = useColorScheme() ?? 'light';
+  const colorTheme = theme === 'light' ? COLORS.grayDark : COLORS.gray;
+
   return (
     <ThemedView style={styles.flex} {...rest}>
       <ThemedText style={{ color: colorTheme }}>{text}</ThemedText>

@@ -12,6 +12,8 @@ type Props = {
 
 const FloodedAreas = ({ selectedArea, onAreaPress }: Props) => {
   const { floodedAreas } = useFloodedAreas();
+  console.log('floodedAreas: ', floodedAreas.length);
+  // console.log('floodedAreas: ', floodedAreas);
 
   return floodedAreas?.map((area, index) => (
     <Marker
@@ -26,6 +28,11 @@ const FloodedAreas = ({ selectedArea, onAreaPress }: Props) => {
         style={[
           styles.container,
           selectedArea?.id === area.id && styles.selectedArea,
+          {
+            backgroundColor: area.status.includes('pending')
+              ? COLORS.orange
+              : COLORS.lightBlue,
+          },
         ]}
       >
         <MaterialIcons name="waves" size={19} color="white" />

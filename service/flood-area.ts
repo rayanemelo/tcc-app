@@ -2,13 +2,13 @@ import { FloodArea, FloodAreaForm, FloodAreaImage } from '@/types/flood-area';
 import { API } from './api';
 
 export class FlooadAreaService {
-  public async getActiveFloodArea(): Promise<FloodArea[] | null> {
+  public async getActiveFloodArea(): Promise<FloodArea[]> {
     try {
       const res = await API.get('/flood-area/active');
       return res.data;
     } catch (error) {
       console.error(error);
-      return null;
+      return [];
     }
   }
 
@@ -30,6 +30,16 @@ export class FlooadAreaService {
     } catch (error) {
       console.error(error);
       return null;
+    }
+  }
+
+  public async getPendingFloodAreaByUserId(): Promise<FloodArea[]> {
+    try {
+      const res = await API.get(`/flood-area/user/pending`);
+      return res.data;
+    } catch (error) {
+      console.error(error);
+      return [];
     }
   }
 }

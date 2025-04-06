@@ -4,14 +4,12 @@ import { StyleSheet, useColorScheme } from 'react-native';
 import ParallaxScrollView from '@/components/ui/ParallaxScrollView';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { useFaqs } from '@/hooks/useFaq';
-import { COLORS } from '@/styles/colors';
 import Faqs from '@/components/Faq';
 import CustomThemedView from '@/components/shared/CustomThemedView';
 
 export default function FAQScreen() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const theme = useColorScheme() ?? 'light';
-  const colorTheme = theme === 'light' ? COLORS.grayDark : COLORS.gray;
 
   const { faqs } = useFaqs();
 
@@ -26,10 +24,7 @@ export default function FAQScreen() {
             setOpenIndex={setOpenIndex}
           />
         ) : (
-          <CustomThemedView
-            colorTheme={colorTheme}
-            text="Nenhuma pergunta foi encontrada"
-          />
+          <CustomThemedView text="Nenhuma pergunta foi encontrada" />
         )}
       </ThemedView>
     </ParallaxScrollView>

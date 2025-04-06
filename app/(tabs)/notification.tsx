@@ -34,10 +34,7 @@ export default function NotificationScreen() {
         {notifications.length > 0 ? (
           <Notifications />
         ) : (
-          <CustomThemedView
-            colorTheme={colorTheme}
-            text="Nenhuma notificação foi encontrada"
-          />
+          <CustomThemedView text="Nenhuma notificação foi encontrada" />
         )}
       </ThemedView>
     </ParallaxScrollView>

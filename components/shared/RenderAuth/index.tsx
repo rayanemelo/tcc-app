@@ -1,6 +1,6 @@
 import Authentication from '@/components/Authentication';
 import AuthPrompt from '@/components/Authentication/AuthPrompt';
-import ParallaxScrollView from '@/components/ui/ParallaxScrollView';
+import { ThemedView } from '@/components/ui/ThemedView';
 import { useAuth } from '@/context/AuthContext';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -33,6 +33,6 @@ export function RenderAuth({ children }: Props) {
       )}
     </View>
   ) : (
-    <ParallaxScrollView>{children}</ParallaxScrollView>
+    <ThemedView>{children}</ThemedView>
   );
 }

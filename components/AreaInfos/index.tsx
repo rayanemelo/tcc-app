@@ -1,14 +1,9 @@
-import { View, Text } from 'react-native';
 import Modal from '../shared/Modal';
-import { COLORS } from '@/styles/colors';
 import { FloodArea } from '@/types/flood-area';
-import Tag from '../shared/Tag';
-import CloseButton from '../shared/CloseButton';
 import { useState } from 'react';
-import { styles } from './styles';
-import { formatDate } from '@/utils/functions/format-date';
-import SeeImagens from '../shared/SeeImagensButton';
 import ImageCarousel from '../ImageCarousel';
+import { PublicArea } from './PublicArea';
+import { PrivatePendingArea } from './PrivatePendingArea';
 
 type Props = {
   isVisible: boolean;
@@ -17,16 +12,29 @@ type Props = {
 };
 
 const AreaInfos = ({ isVisible, onClose, area }: Props) => {
-  const { address, createdAt } = area;
-
+  console.log('area: ', area);
   const [visibleImages, setVisibleImages] = useState(false);
 
-  const publishedDateRelativeToNow = formatDate(createdAt);
+  const { status } = area;
 
   return (
     <>
       <Modal isVisible={isVisible}>
-        <View style={styles.container}>
+        {status === 'pending' ? (
+          <PrivatePendingArea
+            area={area}
+            onClose={() => onClose()}
+            onPress={() => setVisibleImages(true)}
+          />
+        ) : (
+          <PublicArea
+            area={area}
+            onClose={() => onClose()}
+            onPress={() => setVisibleImages(true)}
+          />
+        )}
+
+        {/* <View style={styles.container}>
           <View style={styles.content}>
             <Text style={styles.address}>{address}</Text>
             <CloseButton onPress={onClose} color={COLORS.gray} />
@@ -41,11 +49,11 @@ const AreaInfos = ({ isVisible, onClose, area }: Props) => {
             onPress={() => setVisibleImages(true)}
             text="Ver imagens"
           />
-        </View>
+        </View> */}
       </Modal>
       {visibleImages && (
         <ImageCarousel
-          images={area.images}
+          images={area.images || []}
           onClose={() => setVisibleImages(false)}
         />
       )}

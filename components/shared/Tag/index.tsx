@@ -35,10 +35,10 @@ const Tag = ({ type, ...rest }: Props) => {
 
   return (
     <View
-      style={[styles.container, { backgroundColor: types[type].color }]}
+      style={[styles.container, { backgroundColor: types[type]?.color }]}
       {...rest}
     >
-      <Text style={styles.label}>{types[type].label}</Text>
+      <Text style={styles.label}>{types[type]?.label}</Text>
     </View>
   );
 };

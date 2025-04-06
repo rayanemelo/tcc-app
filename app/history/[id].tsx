@@ -1,4 +1,3 @@
-import ParallaxScrollView from '@/components/ui/ParallaxScrollView';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { StyleSheet, View } from 'react-native';
@@ -12,58 +11,53 @@ import ImageCarousel from '@/components/ImageCarousel';
 export default function HistoryDetails() {
   const { history, setVisibleImages, visibleImages } = useHistoryDetails();
   return history ? (
-    <>
-      <ParallaxScrollView>
-        <ThemedView style={[styles.wrapper]}>
+    <ThemedView style={styles.wrapper}>
+      <View style={{ flex: 1, gap: 16 }}>
+        <View>
+          <ThemedText style={styles.bold}>Local</ThemedText>
+          <ThemedText>{history.address}</ThemedText>
+          <ThemedText>{formatCustomDate(history.createdAt)}</ThemedText>
+        </View>
+
+        <View style={styles.flex}>
+          <ThemedText style={styles.bold}>Status</ThemedText>
+          <Tag type={mapStatusToTagType(history.status)} />
+        </View>
+
+        <View style={styles.flex}>
+          <ThemedText style={styles.bold}>Nível da enchente</ThemedText>
+          <Tag type={history.floodLevelId} />
+        </View>
+
+        {history.commentsAdmin && (
           <View>
-            <ThemedText style={[styles.bold]}>Local</ThemedText>
-            <ThemedText>{history.address}</ThemedText>
-            <ThemedText>{formatCustomDate(history.createdAt)}</ThemedText>
-          </View>
-          <View style={styles.flex}>
-            <ThemedText style={[styles.bold]}>Status</ThemedText>
-            <ThemedText>
-              <Tag type={mapStatusToTagType(history.status)} />
+            <ThemedText style={[styles.bold, styles.flex]}>
+              Comentários
             </ThemedText>
+            <ThemedText>{history.commentsAdmin}</ThemedText>
           </View>
-          <View style={styles.flex}>
-            <ThemedText style={[styles.bold]}>Nível da enchente</ThemedText>
-            <ThemedText>
-              <Tag type={history.floodLevelId} />
-            </ThemedText>
-          </View>
+        )}
 
-          {history.commentsAdmin && (
-            <View>
-              <ThemedText style={[styles.bold, styles.flex]}>
-                Comentários
-              </ThemedText>
-              <ThemedText>{history.commentsAdmin}</ThemedText>
-            </View>
-          )}
+        <SeeImagensButton
+          text="Ver imagem"
+          onPress={() => setVisibleImages(true)}
+        />
+      </View>
 
-          <SeeImagensButton
-            text="Ver imagem"
-            onPress={() => setVisibleImages(true)}
-          />
-        </ThemedView>
-      </ParallaxScrollView>
       {visibleImages && history.images && (
         <ImageCarousel
           images={history.images}
           onClose={() => setVisibleImages(false)}
         />
       )}
-    </>
-  ) : (
-    <></>
-  );
+    </ThemedView>
+  ) : null;
 }
 
 const styles = StyleSheet.create({
   wrapper: {
+    flex: 1,
     padding: 24,
-    gap: 16,
   },
   flex: {
     flexDirection: 'row',
