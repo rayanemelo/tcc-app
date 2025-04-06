@@ -1,6 +1,4 @@
 import {
-  FlatList,
-  RefreshControl,
   StyleSheet,
   TouchableOpacity,
   useColorScheme,
@@ -14,6 +12,7 @@ import { COLORS } from '@/styles/colors';
 import { formatDate } from '@/utils/functions/format-date';
 import Tag from '../shared/Tag';
 import { mapStatusToTagType } from '@/utils/functions/map-status-to-tag-type';
+import { FlatList, RefreshControl } from 'react-native-gesture-handler';
 
 const ListHistory = () => {
   const theme = useColorScheme() ?? 'light';
@@ -78,6 +77,7 @@ const styles = StyleSheet.create({
   createdAt: {
     fontSize: 14,
     textAlign: 'right',
+    marginBottom: 4,
   },
 });
 

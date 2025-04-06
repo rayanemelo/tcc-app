@@ -30,7 +30,7 @@ export default function HistoryDetails() {
         </View>
 
         {history.commentsAdmin && (
-          <View>
+          <View style={styles.border}>
             <ThemedText style={[styles.bold, styles.flex]}>
               Comentários
             </ThemedText>
@@ -66,5 +66,11 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontWeight: 'bold',
+  },
+  border: {
+    borderTopWidth: 1,
+    borderColor: '#D9D9D9',
+    paddingVertical: 16,
+    marginTop: 16,
   },
 });

@@ -1,5 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
 import { API } from '@/service/api';
-import { useEffect, useState } from 'react';
 
 export interface INotification {
   id: number;
@@ -7,23 +7,24 @@ export interface INotification {
   createdAt: string;
 }
 
+async function fetchUserHistory(): Promise<INotification[]> {
+  const response = await API.get('/notification');
+  return response.data;
+}
+
 export function useNotifications() {
-  const [notifications, setNotifications] = useState<INotification[] | []>([]);
+  const query = useQuery<INotification[]>({
+    queryKey: ['notification'],
+    queryFn: fetchUserHistory,
+  });
 
-  const fetchNotifications = async () => {
-    try {
-      const response = await API.get('/notification');
-      setNotifications(response.data);
-    } catch {
-      setNotifications([]);
-    }
-  };
-
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
+  const sortedData =
+    query.data?.sort((a, b) => {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }) ?? [];
 
   return {
-    notifications,
+    notifications: sortedData,
+    ...query,
   };
 }

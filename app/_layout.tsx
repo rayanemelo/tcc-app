@@ -14,7 +14,7 @@ import { StatusBar } from 'expo-status-bar';
 import { COLORS } from '@/styles/colors';
 import { AuthProvider } from '@/context/AuthContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -41,48 +41,52 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <AuthProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-            <Stack.Screen
-              name="faq"
-              options={{
-                headerBackButtonDisplayMode: 'minimal',
-                headerTitle: 'PERGUNTAS FREQUENTES',
-                headerStyle: {
-                  backgroundColor:
-                    colorScheme === 'light'
-                      ? COLORS.lightThemeBackground
-                      : COLORS.blackDefault,
-                },
-                headerTitleStyle: {
-                  fontSize: 16,
-                  color: colorScheme === 'light' ? COLORS.black : COLORS.white,
-                  fontWeight: 'bold',
-                },
-                headerTintColor: COLORS.grayDark,
-              }}
-            />
-            <Stack.Screen
-              name="history/[id]"
-              options={{
-                headerBackButtonDisplayMode: 'minimal',
-                headerTintColor: COLORS.grayDark,
-                headerTitle: 'DETALHES',
-                headerStyle: {
-                  backgroundColor:
-                    colorScheme === 'light'
-                      ? COLORS.lightThemeBackground
-                      : COLORS.blackDefault,
-                },
-                headerTitleStyle: {
-                  fontSize: 16,
-                  color: colorScheme === 'light' ? COLORS.black : COLORS.white,
-                  fontWeight: 'bold',
-                },
-              }}
-            />
-          </Stack>
+          <GestureHandlerRootView>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+              <Stack.Screen
+                name="faq"
+                options={{
+                  headerBackButtonDisplayMode: 'minimal',
+                  headerTitle: 'PERGUNTAS FREQUENTES',
+                  headerStyle: {
+                    backgroundColor:
+                      colorScheme === 'light'
+                        ? COLORS.lightThemeBackground
+                        : COLORS.blackDefault,
+                  },
+                  headerTitleStyle: {
+                    fontSize: 16,
+                    color:
+                      colorScheme === 'light' ? COLORS.black : COLORS.white,
+                    fontWeight: 'bold',
+                  },
+                  headerTintColor: COLORS.grayDark,
+                }}
+              />
+              <Stack.Screen
+                name="history/[id]"
+                options={{
+                  headerBackButtonDisplayMode: 'minimal',
+                  headerTintColor: COLORS.grayDark,
+                  headerTitle: 'DETALHES',
+                  headerStyle: {
+                    backgroundColor:
+                      colorScheme === 'light'
+                        ? COLORS.lightThemeBackground
+                        : COLORS.blackDefault,
+                  },
+                  headerTitleStyle: {
+                    fontSize: 16,
+                    color:
+                      colorScheme === 'light' ? COLORS.black : COLORS.white,
+                    fontWeight: 'bold',
+                  },
+                }}
+              />
+            </Stack>
+          </GestureHandlerRootView>
           <StatusBar style="auto" />
         </AuthProvider>
       </ThemeProvider>
