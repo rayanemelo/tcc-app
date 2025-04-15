@@ -28,6 +28,8 @@ export type FloodAreaForm = {
     latitude: number | string;
     longitude: number | string;
   };
+  yesCount: number;
+  noCount: number;
 };
 
 export type FloodAreaImage = {
@@ -36,4 +38,12 @@ export type FloodAreaImage = {
   url: string;
   createdAt: string;
   updatedAt: string;
+};
+
+export type FloodAreaUpdate = {
+  id: number;
+  // userId: number;
+  yesCount: number;
+  noCount: number;
+  // image: string;
 };

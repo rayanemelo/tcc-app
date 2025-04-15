@@ -10,12 +10,14 @@ type MarkerFloodProps = {
   markerAddressModal: boolean;
   floodLocationCoordinates: LatLng | null;
   isLoading: boolean;
+  nextStep: () => void;
   send: () => Promise<any>;
+  returnToStepOne: () => void;
   resetFloodedAreaMarking: () => void;
   setCurrentStep: (step: number) => void;
   handleMapPress: (event: MapPressEvent) => void;
-  handleValidateLocation: () => boolean;
   setFloodLocationCoordinates: (coordinates: LatLng | null) => void;
+  handleConfirmFloodLocation: () => void;
 };
 
 type MarkerFloodProviderProps = { children: JSX.Element | JSX.Element[] };
@@ -88,9 +90,12 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
         latitude: userLocation.latitude.toString(),
         longitude: userLocation.longitude.toString(),
       },
+      yesCount: 0,
+      noCount: 0,
     };
 
     const res = await floodAreaService.sendFloodArea(payload);
+    console.log('res: ', res);
 
     setIsLoading(false);
 
@@ -100,6 +105,25 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
       setCurrentStep(stepError);
     }
     return res;
+  }
+
+  function nextStep() {
+    setCurrentStep(currentStep + 1);
+  }
+
+  function handleConfirmFloodLocation() {
+    const isValidLocation = handleValidateLocation();
+
+    if (!isValidLocation) {
+      return;
+    }
+
+    nextStep();
+  }
+
+  function returnToStepOne() {
+    resetFloodedAreaMarking();
+    setCurrentStep(1);
   }
 
   return (
@@ -112,9 +136,11 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
         currentStep,
         setCurrentStep,
         setFloodLocationCoordinates,
-        resetFloodedAreaMarking,
         isLoading,
-        handleValidateLocation,
+        nextStep,
+        returnToStepOne,
+        resetFloodedAreaMarking,
+        handleConfirmFloodLocation,
       }}
     >
       {children}

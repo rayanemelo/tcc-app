@@ -6,9 +6,10 @@ import { COLORS } from '@/styles/colors';
 
 interface Props {
   close: () => void;
+  text: string;
 }
 
-const SuccessMessage = ({ close }: Props) => {
+const SuccessMessage = ({ close, text }: Props) => {
   return (
     <CustomAlert>
       <CloseButton
@@ -22,10 +23,7 @@ const SuccessMessage = ({ close }: Props) => {
       <Text style={styles.title}>
         Obrigado por contribuir para a segurança da comunidade!
       </Text>
-      <Text style={styles.message}>
-        Estamos analisando a imagem enviada. Assim que for confirmada, a área
-        será marcada como alagada no mapa.
-      </Text>
+      <Text style={styles.message}>{text}</Text>
     </CustomAlert>
   );
 };
