@@ -23,7 +23,8 @@ export function NotWithinRadius({ close }: Props) {
           color={COLORS.blue}
         />
         <Text style={styles.text}>
-          Você não está dentro do raio de 100 metros da área que deseja marcar.
+          Você precisa estar dentro de um raio de 100 metros da área que deseja
+          marcar.
         </Text>
       </View>
     </CustomAlert>

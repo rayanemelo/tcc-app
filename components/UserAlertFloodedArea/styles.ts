@@ -18,4 +18,10 @@ export const styles = StyleSheet.create({
     width: '100%',
     gap: 10,
   },
+  close: {
+    position: 'absolute',
+    top: 20,
+    right: 15,
+    zIndex: 1,
+  },
 });

@@ -1,4 +1,9 @@
-import { FloodArea, FloodAreaForm, FloodAreaImage } from '@/types/flood-area';
+import {
+  FloodArea,
+  FloodAreaForm,
+  FloodAreaImage,
+  FloodAreaUpdate,
+} from '@/types/flood-area';
 import { API } from './api';
 
 export class FlooadAreaService {
@@ -40,6 +45,20 @@ export class FlooadAreaService {
     } catch (error) {
       console.error(error);
       return [];
+    }
+  }
+
+  public async updateFloodAreaAlert(
+    payload: FloodAreaUpdate
+  ): Promise<AxiosResponse<FloodArea | null>> {
+    try {
+      return await API.patch('/flood-area/user/alert-response', payload);
+    } catch (error) {
+      console.error(error);
+      return {
+        status: 500,
+        data: null,
+      };
     }
   }
 }

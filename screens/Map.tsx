@@ -9,25 +9,30 @@ import ErrorMessage from '@/components/Messages/error';
 import SuccessMessage from '@/components/Messages/success';
 import { NotWithinRadius } from '@/components/NotWithinRadius';
 import UserAlertFloodedArea from '@/components/UserAlertFloodedArea';
-import { useAuth } from '@/context/AuthContext';
 import {
-  stepAuthentication,
   stepConfirmFloodLocation,
   useMarkerFlood,
 } from '@/context/MarkerFloodContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 export default function MapScreen() {
-  const { authentication } = useAuth();
+  const [alertUser, setAlertUser] = useState(false);
 
   const {
-    markerAddressModal,
-    resetFloodedAreaMarking,
+    send,
+    submit,
+    update,
+    nextStep,
+    areaNearby,
+    authAction,
+    updateCount,
     currentStep,
     setCurrentStep,
-    send,
-    handleValidateLocation,
+    returnToStepOne,
+    markerAddressModal,
+    isLoadingAlertUser,
+    handleConfirmFloodLocation,
   } = useMarkerFlood();
 
   useEffect(() => {
@@ -35,35 +40,6 @@ export default function MapScreen() {
       setCurrentStep(stepConfirmFloodLocation);
     }
   }, [markerAddressModal]);
-
-  function nextStep() {
-    setCurrentStep(currentStep + 1);
-  }
-
-  function handleConfirmFloodLocation() {
-    const isValidLocation = handleValidateLocation();
-
-    if (!isValidLocation) {
-      return;
-    }
-
-    nextStep();
-  }
-
-  function returnToStepOne() {
-    resetFloodedAreaMarking();
-    setCurrentStep(1);
-  }
-
-  async function userIsAuthenticated() {
-    if (!authentication.authenticated) {
-      setCurrentStep(stepAuthentication);
-
-      return;
-    }
-
-    await send();
-  }
 
   const getStep = () => {
     const steps: Record<number, React.ReactNode> = {
@@ -86,19 +62,40 @@ export default function MapScreen() {
       4: (
         <FloodLevel
           onClose={() => returnToStepOne()}
-          handleContinue={() => userIsAuthenticated()}
+          handleContinue={() => submit()}
         />
       ),
       5: (
         <Authentication
           handleCancel={() => returnToStepOne()}
-          handleConfirm={() => send()}
+          handleConfirm={() => {
+            if (authAction === 'submit') {
+              send();
+            } else {
+              updateCount(alertUser);
+            }
+          }}
         />
       ),
       6: <SuccessMessage close={() => returnToStepOne()} />,
       7: <ErrorMessage close={() => returnToStepOne()} />,
       8: <NotWithinRadius close={() => returnToStepOne()} />,
       9: <LocationAccess close={() => returnToStepOne()} />,
+      10: (
+        <UserAlertFloodedArea
+          address={areaNearby?.address || ''}
+          isLoading={isLoadingAlertUser}
+          close={() => returnToStepOne()}
+          onPressYes={() => {
+            setAlertUser(true);
+            update(true);
+          }}
+          onPressNo={() => {
+            setAlertUser(false);
+            update(false);
+          }}
+        />
+      ),
     };
 
     return steps[currentStep];
@@ -108,7 +105,6 @@ export default function MapScreen() {
     <View style={styles.container}>
       <CustomMap />
       <View style={styles.main}>{getStep()}</View>
-      <UserAlertFloodedArea address="Rua dos Bobos, nº 0" />
     </View>
   );
 }

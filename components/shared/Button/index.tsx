@@ -1,11 +1,11 @@
 import { COLORS } from '@/styles/colors';
 import {
   Text,
-  StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
   ActivityIndicator,
 } from 'react-native';
+import { styles } from './styles';
 
 type Props = TouchableOpacityProps & {
   type: 'outline' | 'filled';
@@ -25,7 +25,10 @@ const Button = ({ type, text, isLoading, disabled, ...rest }: Props) => {
       {...rest}
     >
       {isLoading ? (
-        <ActivityIndicator size="small" color="#fff" />
+        <ActivityIndicator
+          size="small"
+          color={type === 'outline' ? COLORS.blue : COLORS.white}
+        />
       ) : (
         <Text
           style={type === 'outline' ? styles.outlineText : styles.filledText}
@@ -36,17 +39,5 @@ const Button = ({ type, text, isLoading, disabled, ...rest }: Props) => {
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  button: { flex: 1, borderRadius: 6, padding: 15 },
-  outline: {
-    backgroundColor: COLORS.white,
-    borderWidth: 1,
-    borderColor: '#D4DAE1',
-  },
-  filled: { backgroundColor: COLORS.blue },
-  outlineText: { color: COLORS.blue, textAlign: 'center' },
-  filledText: { color: COLORS.white, textAlign: 'center' },
-});
 
 export default Button;

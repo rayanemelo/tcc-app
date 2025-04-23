@@ -2,23 +2,15 @@ import { useFloodLocation } from '@/hooks/useFloodLocation';
 import { useUserLocation } from '@/hooks/useUserLocation';
 import { FlooadAreaService } from '@/service/flood-area';
 import { isWithinRadius } from '@/utils/functions/is-within-radius';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { MapPressEvent, LatLng } from 'react-native-maps';
+import { useAuth } from './AuthContext';
 
-type MarkerFloodProps = {
-  currentStep: number;
-  markerAddressModal: boolean;
-  floodLocationCoordinates: LatLng | null;
-  isLoading: boolean;
-  send: () => Promise<any>;
-  resetFloodedAreaMarking: () => void;
-  setCurrentStep: (step: number) => void;
-  handleMapPress: (event: MapPressEvent) => void;
-  handleValidateLocation: () => boolean;
-  setFloodLocationCoordinates: (coordinates: LatLng | null) => void;
-};
-
-type MarkerFloodProviderProps = { children: JSX.Element | JSX.Element[] };
+import { useFloodedAreas } from '@/hooks/useFloodedAreas';
+import { useUserAccess } from '@/stores/user-access';
+import { getDistanceInMeters } from '@/utils/functions/get-distance-in-meters';
+import { FloodArea } from '@/types/flood-area';
+import { useFloodedAreaStorage } from '@/hooks/useFloodedAreaStorage';
 
 export const stepInfoMessage = 1;
 export const stepConfirmFloodLocation = 2;
@@ -29,6 +21,37 @@ export const stepSuccess = 6;
 export const stepError = 7;
 export const stepNotWithinRadius = 8;
 export const stepLocationAccess = 9;
+export const stepUserAlertFloodedArea = 10;
+
+type MarkerFloodProps = {
+  isLoading: boolean;
+  currentStep: number;
+  isLoadingAlertUser: {
+    yes: boolean;
+    no: boolean;
+  };
+  markerAddressModal: boolean;
+  areaNearby: FloodArea | null;
+  authentication: {
+    authenticated: boolean;
+    token: string | null;
+  };
+  authAction: 'submit' | 'update' | null;
+  floodLocationCoordinates: LatLng | null;
+  nextStep: () => void;
+  send: () => Promise<void>;
+  submit: () => Promise<void>;
+  returnToStepOne: () => void;
+  resetFloodedAreaMarking: () => void;
+  setCurrentStep: (step: number) => void;
+  handleConfirmFloodLocation: () => void;
+  update: (isFlooded: boolean) => Promise<void>;
+  handleMapPress: (event: MapPressEvent) => void;
+  updateCount: (isFlooded: boolean) => Promise<void>;
+  setFloodLocationCoordinates: (coordinates: LatLng | null) => void;
+};
+
+type MarkerFloodProviderProps = { children: JSX.Element | JSX.Element[] };
 
 const MarkerFloodContext = createContext<MarkerFloodProps>(
   {} as MarkerFloodProps
@@ -37,8 +60,23 @@ const MarkerFloodContext = createContext<MarkerFloodProps>(
 const floodAreaService = new FlooadAreaService();
 
 export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
-  const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingAlertUser, setIsLoadingAlertUser] = useState({
+    yes: false,
+    no: false,
+  });
+  const [currentStep, setCurrentStep] = useState(1);
+  const [areaNearby, setAreaNearby] = useState<FloodArea | null>(null);
+  const [authAction, setAuthAction] = useState<'submit' | 'update' | null>(
+    null
+  );
+
+  const { authentication } = useAuth();
+  const { userLocation } = useUserLocation();
+  const { publicFloodedAreas } = useFloodedAreas();
+  const { user } = useUserAccess();
+
+  const { hasUserResponded, storeUserResponse } = useFloodedAreaStorage();
 
   const {
     floodAreaForm,
@@ -49,7 +87,32 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
     resetFloodedAreaMarking,
   } = useFloodLocation();
 
-  const { userLocation } = useUserLocation();
+  useEffect(() => {
+    if (!userLocation || publicFloodedAreas.length === 0) return;
+
+    const checkNearbyArea = async () => {
+      for (const area of publicFloodedAreas) {
+        const isFromSameUser = area.userId === user.id;
+        const distance = getDistanceInMeters(
+          userLocation.latitude,
+          userLocation.longitude,
+          area.latitude,
+          area.longitude
+        );
+
+        if (!isFromSameUser && distance <= 30) {
+          const alreadyResponded = await hasUserResponded(user.id, area.id);
+          if (!alreadyResponded) {
+            setCurrentStep(stepUserAlertFloodedArea);
+            setAreaNearby(area);
+          }
+          break;
+        }
+      }
+    };
+
+    checkNearbyArea();
+  }, [userLocation, publicFloodedAreas, user.id]);
 
   function handleValidateLocation() {
     if (!userLocation) {
@@ -69,6 +132,25 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
       return false;
     }
     return true;
+  }
+
+  function handleConfirmFloodLocation() {
+    const isValidLocation = handleValidateLocation();
+
+    if (!isValidLocation) {
+      return;
+    }
+
+    nextStep();
+  }
+
+  function returnToStepOne() {
+    resetFloodedAreaMarking();
+    setCurrentStep(1);
+  }
+
+  function nextStep() {
+    setCurrentStep(currentStep + 1);
   }
 
   async function send() {
@@ -99,22 +181,87 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
     } else {
       setCurrentStep(stepError);
     }
-    return res;
+    return;
+  }
+
+  async function submit() {
+    if (!authentication.authenticated) {
+      setAuthAction('submit');
+      setCurrentStep(stepAuthentication);
+
+      return;
+    }
+
+    await send();
+    setAuthAction(null);
+  }
+
+  async function update(isFlooded: boolean) {
+    console.log('authentication.authenticated: ', authentication.authenticated);
+    if (!authentication.authenticated) {
+      setAuthAction('update');
+      setCurrentStep(stepAuthentication);
+
+      return;
+    }
+
+    await updateCount(isFlooded);
+    setAuthAction(null);
+  }
+
+  async function updateCount(isFlooded: boolean) {
+    if (isFlooded) {
+      setIsLoadingAlertUser({ yes: true, no: false });
+    } else {
+      setIsLoadingAlertUser({ yes: false, no: true });
+    }
+
+    if (!areaNearby) return;
+
+    let payload = {
+      id: areaNearby.id,
+      yesCount: areaNearby.yesCount,
+      noCount: areaNearby.noCount,
+    };
+
+    if (isFlooded) {
+      payload.yesCount += 1;
+    } else {
+      payload.noCount += 1;
+    }
+
+    console.log(payload);
+
+    const res = await floodAreaService.updateFloodAreaAlert(payload);
+    await storeUserResponse(user.id, areaNearby.id);
+
+    if (res.status !== 200) setCurrentStep(stepSuccess);
+    else setCurrentStep(stepError);
+    setIsLoadingAlertUser({ yes: false, no: false });
   }
 
   return (
     <MarkerFloodContext.Provider
       value={{
         send,
-        markerAddressModal,
-        floodLocationCoordinates,
-        handleMapPress,
-        currentStep,
-        setCurrentStep,
-        setFloodLocationCoordinates,
-        resetFloodedAreaMarking,
+        submit,
+        update,
+        updateCount,
+        nextStep,
         isLoading,
-        handleValidateLocation,
+        authAction,
+        areaNearby,
+        currentStep,
+        authentication,
+        handleMapPress,
+        setCurrentStep,
+        returnToStepOne,
+        isLoadingAlertUser,
+        markerAddressModal,
+        resetFloodedAreaMarking,
+        floodLocationCoordinates,
+        handleConfirmFloodLocation,
+        setFloodLocationCoordinates,
       }}
     >
       {children}

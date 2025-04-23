@@ -9,15 +9,8 @@ type Props = {
 };
 
 const Authentication = ({ handleCancel, handleConfirm }: Props) => {
-  const {
-    form,
-    setForm,
-    prevStep,
-    authService,
-    currentStep,
-    handleContinue,
-    handleConfirmCode,
-  } = useAuthComponent();
+  const { form, setForm, prevStep, currentStep, sendCode, confirmCode } =
+    useAuthComponent();
 
   const getStep = () => {
     const steps: Record<number, JSX.Element> = {
@@ -27,7 +20,7 @@ const Authentication = ({ handleCancel, handleConfirm }: Props) => {
           setForm={setForm}
           handleContinue={() => {
             if (form.phone.length >= 11) {
-              handleContinue();
+              sendCode();
             }
           }}
           handleCancel={handleCancel}
@@ -39,12 +32,12 @@ const Authentication = ({ handleCancel, handleConfirm }: Props) => {
           setForm={setForm}
           handleCancel={() => prevStep()}
           handleConfirm={async () => {
-            await handleConfirmCode();
+            await confirmCode();
 
             handleConfirm();
           }}
           handleResend={async () => {
-            await authService.sendCode(form.phone);
+            sendCode();
           }}
         />
       ),

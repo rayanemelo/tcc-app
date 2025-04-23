@@ -3,7 +3,7 @@ import { useNativeLocalStorage } from '@/hooks/useNativeLocalStorage';
 import axios from 'axios';
 
 export const API = axios.create({
-  baseURL: `http://192.168.2.108:3331/api`,
+  baseURL: `http://192.168.2.109:3331/api`,
 });
 
 API.interceptors.request.use(async (config) => {

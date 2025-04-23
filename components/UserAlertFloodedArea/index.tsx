@@ -2,46 +2,47 @@ import { View, Text } from 'react-native';
 import Modal from '../shared/Modal';
 import Button from '../shared/Button';
 import { styles } from './styles';
-import { useUserLocation } from '@/hooks/useUserLocation';
-import { useFloodedAreas } from '@/hooks/useFloodedAreas';
-import { useEffect, useState } from 'react';
-import { getDistanceInMeters } from '@/utils/functions/get-distance-in-meters';
-import { useUserAccess } from '@/stores/user-access';
+import CloseButton from '../shared/CloseButton';
+import { COLORS } from '@/styles/colors';
 
-type Props = { address: string };
+type Props = {
+  address: string;
+  isLoading: {
+    yes: boolean;
+    no: boolean;
+  };
+  close: () => void;
+  onPressNo: () => void;
+  onPressYes: () => void;
+};
 
-const UserAlertFloodedArea = ({ address }: Props) => {
-  const { userLocation } = useUserLocation();
-  const { publicFloodedAreas } = useFloodedAreas();
-  const { user } = useUserAccess();
-
-  const [openModal, setOpenModal] = useState(false);
-
-  useEffect(() => {
-    if (!userLocation || publicFloodedAreas.length === 0) return;
-
-    const areaNearby = publicFloodedAreas.find((area) => {
-      const isFromSameUser = area.userId === user.id;
-      const distance = getDistanceInMeters(
-        userLocation.latitude,
-        userLocation.longitude,
-        area.latitude,
-        area.longitude
-      );
-
-      return !isFromSameUser && distance <= 30;
-    });
-
-    setOpenModal(!!areaNearby);
-  }, [userLocation, publicFloodedAreas, user.id]);
-
+const UserAlertFloodedArea = ({
+  close,
+  address,
+  isLoading,
+  onPressNo,
+  onPressYes,
+}: Props) => {
   return (
-    <Modal isVisible={openModal}>
+    <Modal isVisible={true}>
+      <View style={styles.close}>
+        <CloseButton onPress={close} color={COLORS.gray} />
+      </View>
       <Text style={styles.title}>Esta área ainda está alagada?</Text>
       <Text style={styles.address}>{address}</Text>
       <View style={styles.buttonContainer}>
-        <Button text="Não" onPress={() => {}} type="outline" />
-        <Button text="Sim" onPress={() => {}} type="filled" />
+        <Button
+          text="Não"
+          onPress={onPressNo}
+          type="outline"
+          isLoading={isLoading.no}
+        />
+        <Button
+          text="Sim"
+          onPress={onPressYes}
+          type="filled"
+          isLoading={isLoading.yes}
+        />
       </View>
     </Modal>
   );
