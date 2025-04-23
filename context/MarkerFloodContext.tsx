@@ -10,11 +10,14 @@ type MarkerFloodProps = {
   markerAddressModal: boolean;
   floodLocationCoordinates: LatLng | null;
   isLoading: boolean;
+  nextStep: () => void;
   send: () => Promise<any>;
+  returnToStepOne: () => void;
   resetFloodedAreaMarking: () => void;
-  setCurrentStep: (step: number) => void;
-  handleMapPress: (event: MapPressEvent) => void;
   handleValidateLocation: () => boolean;
+  setCurrentStep: (step: number) => void;
+  handleConfirmFloodLocation: () => void;
+  handleMapPress: (event: MapPressEvent) => void;
   setFloodLocationCoordinates: (coordinates: LatLng | null) => void;
 };
 
@@ -102,6 +105,25 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
     return res;
   }
 
+  function nextStep() {
+    setCurrentStep(currentStep + 1);
+  }
+
+  function handleConfirmFloodLocation() {
+    const isValidLocation = handleValidateLocation();
+
+    if (!isValidLocation) {
+      return;
+    }
+
+    nextStep();
+  }
+
+  function returnToStepOne() {
+    resetFloodedAreaMarking();
+    setCurrentStep(1);
+  }
+
   return (
     <MarkerFloodContext.Provider
       value={{
@@ -115,6 +137,9 @@ export const MarkerFloodProvider = ({ children }: MarkerFloodProviderProps) => {
         resetFloodedAreaMarking,
         isLoading,
         handleValidateLocation,
+        nextStep,
+        handleConfirmFloodLocation,
+        returnToStepOne,
       }}
     >
       {children}

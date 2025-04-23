@@ -37,3 +37,9 @@ export type FloodAreaImage = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type FloodAreaUpdate = {
+  id: number;
+  yesCount: number;
+  noCount: number;
+};

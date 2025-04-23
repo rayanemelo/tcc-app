@@ -25,7 +25,10 @@ const Button = ({ type, text, isLoading, disabled, ...rest }: Props) => {
       {...rest}
     >
       {isLoading ? (
-        <ActivityIndicator size="small" color="#fff" />
+        <ActivityIndicator
+          size="small"
+          color={type === 'outline' ? COLORS.blue : COLORS.white}
+        />
       ) : (
         <Text
           style={type === 'outline' ? styles.outlineText : styles.filledText}
@@ -38,7 +41,14 @@ const Button = ({ type, text, isLoading, disabled, ...rest }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  button: { flex: 1, borderRadius: 6, padding: 15 },
+  button: {
+    flex: 1,
+    borderRadius: 6,
+    height: 45,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   outline: {
     backgroundColor: COLORS.white,
     borderWidth: 1,

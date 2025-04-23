@@ -13,8 +13,10 @@ import { useAuth } from '@/context/AuthContext';
 import {
   stepAuthentication,
   stepConfirmFloodLocation,
+  stepError,
   useMarkerFlood,
 } from '@/context/MarkerFloodContext';
+import { useUserAlertFloodedArea } from '@/hooks/useUserAlertFloodedArea';
 import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -22,13 +24,23 @@ export default function MapScreen() {
   const { authentication } = useAuth();
 
   const {
-    markerAddressModal,
-    resetFloodedAreaMarking,
+    send,
+    nextStep,
     currentStep,
     setCurrentStep,
-    send,
-    handleValidateLocation,
+    returnToStepOne,
+    markerAddressModal,
+    handleConfirmFloodLocation,
   } = useMarkerFlood();
+
+  const {
+    changeCountFloodedArea,
+    isLoading,
+    openModal,
+    closeModal,
+    flowAlertUser,
+    setFlowAlertUser,
+  } = useUserAlertFloodedArea();
 
   useEffect(() => {
     if (markerAddressModal) {
@@ -36,34 +48,42 @@ export default function MapScreen() {
     }
   }, [markerAddressModal]);
 
-  function nextStep() {
-    setCurrentStep(currentStep + 1);
-  }
+  async function submit(
+    responseUser: boolean | undefined,
+    isFlow: boolean = false
+  ) {
+    const isAuthenticated = authentication.authenticated;
 
-  function handleConfirmFloodLocation() {
-    const isValidLocation = handleValidateLocation();
-
-    if (!isValidLocation) {
-      return;
-    }
-
-    nextStep();
-  }
-
-  function returnToStepOne() {
-    resetFloodedAreaMarking();
-    setCurrentStep(1);
-  }
-
-  async function userIsAuthenticated() {
-    if (!authentication.authenticated) {
+    if (!isAuthenticated) {
+      closeModal();
       setCurrentStep(stepAuthentication);
-
       return;
     }
 
+    if (isFlow && responseUser !== undefined) {
+      console.log('update');
+      update(responseUser);
+      return;
+    }
+
+    console.log('send flood area');
     await send();
   }
+
+  async function update(responseUser: boolean) {
+    console.log('update: ');
+    const res = await changeCountFloodedArea(responseUser);
+    console.log('res: ', res?.status);
+
+    if (res?.status === 200) setCurrentStep(stepConfirmFloodLocation);
+    else setCurrentStep(stepError);
+
+    closeModal();
+  }
+
+  const textSuccess = !flowAlertUser
+    ? 'Estamos analisando a imagem enviada. Assim que for confirmada, a área  será marcada como alagada no mapa.'
+    : '';
 
   const getStep = () => {
     const steps: Record<number, React.ReactNode> = {
@@ -86,16 +106,16 @@ export default function MapScreen() {
       4: (
         <FloodLevel
           onClose={() => returnToStepOne()}
-          handleContinue={() => userIsAuthenticated()}
+          handleContinue={() => submit(undefined)}
         />
       ),
       5: (
         <Authentication
           handleCancel={() => returnToStepOne()}
-          handleConfirm={() => send()}
+          handleConfirm={() => submit(undefined)}
         />
       ),
-      6: <SuccessMessage close={() => returnToStepOne()} />,
+      6: <SuccessMessage close={() => returnToStepOne()} text={textSuccess} />,
       7: <ErrorMessage close={() => returnToStepOne()} />,
       8: <NotWithinRadius close={() => returnToStepOne()} />,
       9: <LocationAccess close={() => returnToStepOne()} />,
@@ -108,7 +128,20 @@ export default function MapScreen() {
     <View style={styles.container}>
       <CustomMap />
       <View style={styles.main}>{getStep()}</View>
-      <UserAlertFloodedArea address="Rua dos Bobos, nº 0" />
+      <UserAlertFloodedArea
+        openModal={openModal}
+        close={closeModal}
+        address="Rua dos Bobos, nº 0"
+        isLoading={isLoading}
+        onPressNo={() => {
+          setFlowAlertUser(true);
+          submit(false, true);
+        }}
+        onPressYes={() => {
+          setFlowAlertUser(true);
+          submit(true, true);
+        }}
+      />
     </View>
   );
 }
