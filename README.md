@@ -1,50 +1,48 @@
-# Welcome to your Expo app 👋
+# 🌧️ App de Monitoramento Colaborativo de Enchentes
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Este aplicativo foi desenvolvido como parte do Trabalho de Conclusão de Curso (TCC) do curso de Análise e Desenvolvimento de Sistemas. Seu objetivo é permitir que moradores da região do Vale do Paranhana (RS) colaborem com o monitoramento de enchentes em tempo real, por meio de relatos com geolocalização, imagens e informações visuais sobre o nível da água.
 
-## Get started
+## 📱 Funcionalidades
 
-1. Install dependencies
+- Autenticação por SMS (Twilio)
+- Envio de relatos com foto, localização e nível da enchente
+- Visualização dos relatos em mapa interativo (Google Maps)
+- Histórico do usuário
 
-   ```bash
-   npm install
-   ```
+## ⚙️ Tecnologias Utilizadas
 
-2. Start the app
+- **React Native + Expo**
+- **Cloudinary** para imagens
+- **Twilio** para autenticação por SMS
+- **Google Maps API** para geolocalização
 
-   ```bash
-    npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 🚀 Instalação do App (modo desenvolvimento)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Pré-requisitos
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- Node.js instalado
+- Expo CLI
+- Conta na [Expo](https://expo.dev)
+- Conta na [Cloudinary](https://cloudinary.com/)
+- Conta na [Twilio](https://www.twilio.com/)
+- Conta no [Google Cloud Console](https://console.cloud.google.com/) com chave da API de Maps
 
-## Get a fresh project
-
-When you're ready, run:
+### 1. Clone o repositório
 
 ```bash
-npm run reset-project
+git clone https://github.com/rayanemelo/tcc-app
+cd tcc-app
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Instale as dependências
+```bash
+yarn install
+```
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### 3. Inicie o Expo
+```bash
+npx expo start
+``` 
+Escaneie o QR code com o aplicativo Expo Go no seu celular (Android ou iOS) para visualizar o app.
