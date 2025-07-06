@@ -3,7 +3,7 @@ import { useNativeLocalStorage } from '@/hooks/useNativeLocalStorage';
 import axios from 'axios';
 
 export const API = axios.create({
-  baseURL: `http://192.168.2.109:3331/api`,
+  baseURL: `https://tcc-backend-pink.vercel.app/api`,
 });
 
 API.interceptors.request.use(async (config) => {
